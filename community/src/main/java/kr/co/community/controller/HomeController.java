@@ -13,6 +13,6 @@ public class HomeController {
     public String home(Model model){
 
         model.addAttribute("message", "hello world");
-        return "index";
+        return "app/home/index";
     }
 }

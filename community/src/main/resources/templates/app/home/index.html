@@ -1,10 +1,13 @@
-<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-</head>
+<!DOCTYPE>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic}">
+<head></head>
 <body>
-<div th:text = "${message}"></div>
 
+<div layout:fragment="content">
+    <div class="container-fluid">
+        Welcome to HomePage.
+    </div>
+</div>
 </body>
 </html>

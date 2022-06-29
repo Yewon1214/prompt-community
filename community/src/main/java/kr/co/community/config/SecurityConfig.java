@@ -17,18 +17,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable().authorizeRequests()
                 //.antMatchers("/posts/new/**", "/posts/**/edit").authenticated()
                 //.antMatchers("/admin").hasRole("ADMIN")
-                .anyRequest().permitAll();
-//                .and()
-//                .formLogin()
-//                .loginPage("/members/login")
-//                .successForwardUrl("/home/index")
-//                .failureForwardUrl("/home/error")
-//                .permitAll()
-//                .and()
-//                .logout()
-//                .logoutUrl("/home/index")
-//                .permitAll()
-//                .logoutSuccessUrl("/");
+                .anyRequest().permitAll()
+                .and()
+                .formLogin()
+                .loginPage("/member/login")
+                .successForwardUrl("/")
+                .failureForwardUrl("/member/login?error=1")
+                .usernameParameter("email")
+                .loginProcessingUrl("/member/authenticate")
+                .permitAll()
+                .and()
+                .logout()
+                .logoutUrl("/index")
+                .permitAll()
+                .logoutSuccessUrl("/");
     }
 
     @Bean

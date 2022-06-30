@@ -1,12 +1,16 @@
 <!DOCTYPE>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/basic}">
+      layout:decorate="~{layout/basic}" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head></head>
 <body>
 
 <div layout:fragment="content">
     <div class="container-fluid">
-        Welcome to HomePage.
+        <h1>Welcome to Prompt Community</h1>
+        <div>
+<!--            <img src="img/logo.png" width="200px" height="200px">-->
+        </div>
+        <a th:href="@{/post/list}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"> 글쓰러가기 </a>
     </div>
 </div>
 </body>

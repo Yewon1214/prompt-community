@@ -1,6 +1,6 @@
 <!DOCTYPE>
 <html lagn="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/basic}">
+      layout:decorate="~{layout/auth}">
 
 
 <body layout:fragment="content" class="bg-gradient-primary">
@@ -16,26 +16,31 @@
                 <div class="card-body p-0">
                     <!-- Nested Row within Card Body -->
 
-
                         <div>
                             <div class="p-5">
                                 <div class="text-center">
                                     <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                 </div>
-                                <form method="post" class="user" th:action="@{/member/authenticate}">
+                                <form th:action="@{/member/login}" th:method="post" class="user">
+
                                     <th:block th:if="${param.error != null}" >
                                         <div th:replace="fragment/alert :: alert (type='danger', message='아이디 또는 비밀번호가 올바르지 않습니다.')" class="form-group">Alert</div>
                                     </th:block>
+
                                     <div class="form-group">
-                                        <input type="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
+                                        <input name="username" type="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
                                     </div>
                                     <div class="form-group">
-                                        <input type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
+                                        <input name="password" type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
                                     </div>
 
-                                    <button class="btn btn-primary btn-user btn-block">
+                                    <button type="submit" class="btn btn-primary btn-user btn-block">
                                         Login
                                     </button>
+                                    <hr>
+                                    <div class="text-center">
+                                        <a th:href="@{/member/register}" class="small" >Create an Account!</a>
+                                    </div>
 
                                 </form>
 

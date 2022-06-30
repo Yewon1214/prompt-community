@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -54,6 +55,7 @@ public class MemberService implements UserDetailsService {
         }
     }
 
+    @Transactional
     public void saveMember(Member vo){
         Member member = Member.builder()
                         .email(vo.getEmail())
@@ -67,9 +69,11 @@ public class MemberService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Member member = memberRepository.findByEmail(email);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Member member = memberRepository.findByEmail(username);
+
         if(Objects.isNull(member)){
+
             throw new UsernameNotFoundException("Member not found");
         }
         return new MemberAdapter(member);

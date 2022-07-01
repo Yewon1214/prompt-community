@@ -26,8 +26,8 @@ public class MemberController {
     }
 
     @GetMapping("/new")
-    public String register(Model model){
-        model.addAttribute("registerDto", new RegisterVo());
+    public String newMember(Model model){
+        model.addAttribute("registerVo", new RegisterVo());
         return "app/members/new";
     }
 

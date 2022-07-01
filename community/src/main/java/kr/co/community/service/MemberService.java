@@ -61,11 +61,12 @@ public class MemberService implements UserDetailsService {
                         .email(vo.getEmail())
                                 .password(bCryptPasswordEncoder.encode(vo.getPassword()))
                                         .username(vo.getUsername()).build();
-        Role role = Role.builder()
-                        .author(Author.MEMBER)
-                                .member(vo).build();
-        member.getRoles().add(role);
         memberRepository.save(member);
+        Role role = Role.builder()
+                .author(Author.MEMBER)
+                .member(member).build();
+        roleRepository.save(role);
+        member.getRoles().add(role);
     }
 
     @Override

@@ -8,6 +8,9 @@ import kr.co.community.repository.MemberRepository;
 import kr.co.community.repository.RoleRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
+import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -56,7 +60,7 @@ public class MemberService implements UserDetailsService {
     }
 
     @Transactional
-    public void saveMember(Member vo){
+    public void save(Member vo){
         Member member = Member.builder()
                         .email(vo.getEmail())
                                 .password(bCryptPasswordEncoder.encode(vo.getPassword()))
@@ -78,5 +82,14 @@ public class MemberService implements UserDetailsService {
             throw new UsernameNotFoundException("Member not found");
         }
         return new MemberAdapter(member);
+    }
+
+    public Member findByUserName(String username){
+        Member member = memberRepository.findByUsername(username);
+        if(Objects.isNull(member)){
+
+            throw new UsernameNotFoundException("Member not found");
+        }
+        return member;
     }
 }

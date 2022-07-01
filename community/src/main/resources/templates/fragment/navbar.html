@@ -23,7 +23,12 @@
       </li>
     </ul>
 
-      <div class="ml-auto">
+      <div class="ml-auto d-flex align-items-center">
+          <div class="m-2">
+            <th:block sec:authorize="isAuthenticated()" th:with="currentUser=${#authentication.getPrincipal().getMember()}">
+                <span th:text="${currentUser.username}"></span>님 환영합니다.
+            </th:block>
+          </div>
           <a sec:authorize="isAnonymous()" th:href="@{/member/login}" class="btn btn-primary btn-user">
               Login
           </a>

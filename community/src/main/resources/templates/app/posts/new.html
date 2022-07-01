@@ -1,0 +1,35 @@
+<!DOCTYPE>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic}" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <!-- include summernote css/js-->
+    <link th:href="@{/css/summernote/summernote-lite.css}" rel="stylesheet">
+    <!-- include libraries(jQuery, bootstrap) -->
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="/js/summernote/summernote-lite.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            $('#summernote').summernote({
+                placeholder: '내용을 입력하세요',
+                tabsize: 2,
+                height: 100
+            });
+        });
+    </script>
+</head>
+<body class="bg-gradient-primary">
+
+<div layout:fragment="content" class="row justify-content-center">
+    <div class="p-5 ">
+       <form method="post" th:action="@{/posts/new}" th:object="${postVo}">
+           <input type="text" th:field="*{title}">
+           <textarea id="summernote" th:field="*{content}"></textarea>
+           <button type="submit" class="btn btn-primary btn-user btn-block">등록하기</button>
+       </form>
+    </div>
+
+</div>
+</body>
+</html>

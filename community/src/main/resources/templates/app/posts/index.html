@@ -1,0 +1,12 @@
+<!DOCTYPE>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic}" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head></head>
+<body>
+
+<div layout:fragment="content">
+
+    <a th:href="@{/posts/new}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">글쓰러가기!</a>
+</div>
+</body>
+</html>

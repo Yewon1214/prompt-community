@@ -25,17 +25,17 @@ public class MemberController {
         return "app/members/login";
     }
 
-    @GetMapping("/register")
+    @GetMapping("/new")
     public String register(Model model){
         model.addAttribute("registerDto", new RegisterVo());
-        return "app/members/register";
+        return "app/members/new";
     }
 
-    @PostMapping("/register")
+    @PostMapping("/new")
     public String create(@Valid @ModelAttribute RegisterVo registerVo, BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){
-            return "app/members/register";
+            return "app/members/new";
         }
         Member member = registerVo.toEntity();
 

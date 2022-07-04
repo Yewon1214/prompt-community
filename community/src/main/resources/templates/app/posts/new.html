@@ -1,35 +1,52 @@
 <!DOCTYPE>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/basic}" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<head>
-    <!-- include summernote css/js-->
-    <link th:href="@{/css/summernote/summernote-lite.css}" rel="stylesheet">
-    <!-- include libraries(jQuery, bootstrap) -->
-    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
-    <script type="text/javascript" src="/js/bootstrap/bootstrap.bundle.min.js"></script>
-    <script src="/js/summernote/summernote-lite.js"></script>
 
-    <script>
-        $(document).ready(function(){
-            $('#summernote').summernote({
-                placeholder: '내용을 입력하세요',
-                tabsize: 2,
-                height: 100
-            });
-        });
-    </script>
-</head>
-<body class="bg-gradient-primary">
+<body class="container-fluid">
 
 <div layout:fragment="content" class="row justify-content-center">
+
     <div class="p-5 ">
+        <div class="align-items-center mb-4">
+            <h1 class="h3 text-gray-800">글쓰기</h1>
+        </div>
        <form method="post" th:action="@{/posts/new}" th:object="${postVo}">
-           <input type="text" th:field="*{title}">
-           <textarea id="summernote" th:field="*{content}"></textarea>
+           <div class="form-group">
+               <input type="text" th:field="*{title}" placeholder="제목" class="form-control">
+           </div>
+           <div class="form-group">
+               <textarea id="summernote" type="text" th:field="*{content}" class="form-control"></textarea>
+           </div>
            <button type="submit" class="btn btn-primary btn-user btn-block">등록하기</button>
        </form>
     </div>
+    <script>
+        $('#summernote').summernote({
+            placeholder: '내용을 입력하세요',
+            lang: "ko-KR",
+            tabsize: 2,
+            height: 200,
+            toolbar: [
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+                ['color', ['forecolor', 'color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['insert', ['picture', 'link']]
+            ],
+            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋음체','바탕체'],
+            fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72']
+        });
+    </script>
 
 </div>
+<th:block layout:fragment="script">
+    <link th:href="@{/css/summernote/summernote-lite.min.css}" rel="stylesheet">
+    <script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap/bootstrap.js"></script>
+    <script src="/js/summernote/summernote-lite.min.js"></script>
+    <script src="/js/summernote/lang/summernote-ko-KR.js"></script>
+</th:block>
 </body>
 </html>

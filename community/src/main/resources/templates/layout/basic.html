@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
-<!-- 공통 헤드-->
 <head th:replace="fragment/header :: header"></head>
 <body>
 <div th:replace="fragment/navbar :: nav"></div>
@@ -10,5 +9,6 @@
 
 <div th:replace="fragment/footer :: footer"></div>
 
+<div layout:fragment="script"></div>
 </body>
 </html>

@@ -17,17 +17,23 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="post : ${postList}">
+            <tr class="clickable-row" th:each="post : ${postList}" th:attr="data-url=@{'/posts/' + ${post.getId()}} ">
                 <td th:text="${post.id}"></td>
-                <td><a th:href="'/posts/' + ${post.id}" th:text="${post.title}"></a></td>
+                <td th:text="${post.title}"></td>
                 <td th:text="${post.member.getUsername()}"></td>
                 <td th:text="${post.view_cnt}"></td>
             </tr>
             </tbody>
         </table>
-        <a th:href="@{/posts/new}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">글쓰러가기!</a>
+        <a th:href="@{/posts/new}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">작성하기</a>
 
     </div>
+    <script>
+        $('.clickable-row').click(function(e){
+            let row = e.target.parentNode;
+            location.href = row.getAttribute('data-url');
+        });
+    </script>
     </div>
 </body>
 </html>

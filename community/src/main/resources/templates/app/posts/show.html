@@ -4,17 +4,36 @@
 
 <body class="container-fluid">
 
-<div layout:fragment="content" class="row justify-content-center">
+<div layout:fragment="content" class="container">
 
-    <div class="p-5 ">
-        <div class="align-items-center mb-4">
-            <h1 class="h3 text-gray-800">글쓰기</h1>
-        </div>
-        <table>
+    <div class="p-3 align-items-center mb-4">
+
+
+        <table class="table table-bordered text-center">
+
+            <tbody>
+                <tr>
+                    <th>제목</th>
+                    <td th:text="${post.getTitle()}"></td>
+                </tr>
+            <tr>
+                <th>작성자</th>
+                <td th:text="${post.getMember().getUsername()}"></td>
+            </tr>
+                <tr>
+                    <th>작성일</th>
+                    <td th:text="${#dates.format(post.getUpdatedAt(), 'yyyy.MM.dd HH:mm')}"></td>
+                </tr>
+            <tr>
+                <td colspan="2" th:utext="${post.getContent()}" class="text-left"></td>
+            </tr>
+
+            </tbody>
 
         </table>
-    </div>
+        <a th:href="@{/posts}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">목록으로</a>
 
+    </div>
 
 </div>
 

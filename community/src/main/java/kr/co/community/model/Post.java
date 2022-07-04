@@ -22,7 +22,7 @@ public class Post {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false)
     private String content;
 
     private int view_cnt;

@@ -11,12 +11,11 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/posts")
@@ -28,23 +27,33 @@ public class PostController {
     @GetMapping("")
     public String index(Model model){
 
+        List<Post> postList = postService.findAll();
+        model.addAttribute("postList", postList);
         return "app/posts/index";
     }
 
     @GetMapping("/new")
-    public String newPost(Model model){
+    public String create(Model model){
         model.addAttribute("postVo", new PostVo());
         return "app/posts/new";
     }
 
+    @GetMapping("/{id}")
+    public String show(@PathVariable("id") Long id, Model model){
+        Post post = postService.findById(id);
+        model.addAttribute("post", post);
+        return "app/posts/show";
+    }
+
     @PostMapping("/new")
     public String create(@ModelAttribute PostVo postVo, Principal principal){
-        Member currentMember = memberService.findByUserName(principal.getName());
+
+        Member currentMember = memberService.findByEmail(principal.getName());
         System.out.println(principal.getName());
         Post post = Post.builder().title(postVo.getTitle())
                 .content(postVo.getContent())
                 .member(currentMember).build();
         postService.save(post);
-        return "redirect:/posts";
+        return "redirect:/posts/" + post.getId();
     }
 }

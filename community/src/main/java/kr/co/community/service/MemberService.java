@@ -92,4 +92,8 @@ public class MemberService implements UserDetailsService {
         }
         return member;
     }
+
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email);
+    }
 }

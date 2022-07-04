@@ -19,7 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                //.antMatchers("/posts/new/**", "/posts/**/edit").authenticated()
+                .antMatchers("/posts/new/**").authenticated()
                 .anyRequest().permitAll()
                 .and()
                 .csrf()

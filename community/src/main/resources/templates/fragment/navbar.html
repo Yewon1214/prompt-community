@@ -17,7 +17,7 @@
       </li>
 
       <li class="nav-item active">
-        <a class="nav-link" th:href="@{/}">
+        <a class="nav-link" th:href="@{/posts}">
           자유게시판
         </a>
       </li>
@@ -29,7 +29,7 @@
                 <span th:text="${currentUser.username}"></span>님 환영합니다.
             </th:block>
           </div>
-          <a sec:authorize="isAnonymous()" th:href="@{/member/login}" class="btn btn-primary btn-user">
+          <a sec:authorize="isAnonymous()" th:href="@{/member/login}" class="btn btn-primary btn-user mr-2">
               Login
           </a>
           <form sec:authorize="isAuthenticated()" th:action="@{/member/logout}" method="post" class="align-items-center m-0">

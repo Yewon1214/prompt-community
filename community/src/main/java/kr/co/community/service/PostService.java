@@ -33,6 +33,12 @@ public class PostService  {
         return postOptional.orElse(null);
     }
 
+    public void delete(Long id){
+        postRepository.deleteById(id);
+    }
 
-
+    @Transactional
+    public int updateView(Long id) {
+        return postRepository.updateView(id);
+    }
 }

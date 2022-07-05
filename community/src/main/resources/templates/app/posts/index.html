@@ -11,8 +11,9 @@
             <thead>
             <tr>
                 <th style="width: 10%">번호</th>
-                <th style="width: 50%">제목</th>
+                <th style="width: 30%">제목</th>
                 <th style="width: 20%">작성자</th>
+                <th style="width: 30%">작성일</th>
                 <th style="width: 10%">조회수</th>
             </tr>
             </thead>
@@ -21,6 +22,7 @@
                 <td th:text="${post.id}"></td>
                 <td th:text="${post.title}"></td>
                 <td th:text="${post.member.getUsername()}"></td>
+                <td th:text="${#dates.format(post.getUpdatedAt(), 'yyyy-MM-dd')}"></td>
                 <td th:text="${post.view_cnt}"></td>
             </tr>
             </tbody>

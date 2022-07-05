@@ -24,7 +24,7 @@
                                 <form th:action="@{/member/login}" th:method="post" class="user">
 
                                     <th:block th:if="${param.error != null}" >
-                                        <div th:replace="fragment/alert :: alert (type='danger', message='아이디 또는 비밀번호가 올바르지 않습니다.')" class="form-group">Alert</div>
+                                        <div th:replace="fragment/alert :: alert(type='danger', message='아이디 또는 비밀번호가 올바르지 않습니다.')" class="form-group">Alert</div>
                                     </th:block>
 
                                     <div class="form-group">

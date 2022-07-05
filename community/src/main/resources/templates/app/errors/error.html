@@ -1,10 +1,16 @@
-<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-</head>
-<body>
-<div th:text = "${message}"></div>
+<!DOCTYPE>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic}" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
+<body>
+<div layout:fragment="content" class="main-content"
+     th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
+    <div class="container py-4">
+        <h1 th:text="|${httpStatus} - ${httpStatus.reasonPhrase}|"></h1>
+        <p th:text="'status : ' + ${errorStatus}"></p>
+        <p th:text="'Message : ' + ${errorMessage}"></p>
+        <a th:href="@{/posts}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">목록으로 돌아가기</a>
+    </div>
+</div>
 </body>
 </html>

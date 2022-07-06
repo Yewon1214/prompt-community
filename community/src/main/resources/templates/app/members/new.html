@@ -18,7 +18,7 @@
                         <div class="text-center">
                             <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                         </div>
-                        <form th:action="@{/member/new}" th:object="${registerVo}" th:method="post" class="user">
+                        <form th:action="@{/member}" th:object="${registerVo}" th:method="post" class="user">
                             <div class="form-group">
                                 <input name="username" th:field="*{username}" th:errorclass="field-error" type="text" class="form-control form-control-user"
                                        placeholder="User Name">

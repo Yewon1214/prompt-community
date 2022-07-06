@@ -1,7 +1,7 @@
 package kr.co.community.controller;
 
-import kr.co.community.dto.PostDto;
 import kr.co.community.handler.GlobalExceptionHandler;
+import kr.co.community.model.Comment;
 import kr.co.community.model.Member;
 import kr.co.community.model.Pagination;
 import kr.co.community.model.Post;
@@ -13,13 +13,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.data.web.SortDefault;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequestMapping("/posts")
@@ -51,12 +50,18 @@ public class PostController {
     @GetMapping("/{id}")
     public String show(@PathVariable("id") Long id, Model model){
         Post post = postService.findById(id);
+        List<Comment> comments = post.getComments();
+
+        if(comments !=null && !comments.isEmpty()){
+            model.addAttribute("comments", comments);
+        }
+
         postService.updateView(id);
         model.addAttribute("post", post);
         return "app/posts/show";
     }
 
-    @PostMapping("/new")
+    @PostMapping("")
     public String create(@ModelAttribute PostVo postVo, Principal principal){
         Member currentMember = memberService.findByEmail(principal.getName());
         Post post = Post.builder().title(postVo.getTitle())

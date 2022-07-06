@@ -10,7 +10,7 @@
         <div class="align-items-center mb-4">
             <h1 class="h3 text-gray-800">글쓰기</h1>
         </div>
-       <form th:action="@{${postVo.id == null ? '/posts/new' : '/posts/'+postVo.id+'/edit'}}" th:method="${postVo.id == null ? 'post' : 'put'}" th:object="${postVo}">
+       <form th:action="@{${postVo.id == null ? '/posts' : '/posts/'+postVo.id+'/edit'}}" th:method="${postVo.id == null ? 'post' : 'put'}" th:object="${postVo}">
            <div class="form-group">
                <input type="text" th:field="*{title}" placeholder="제목" class="form-control">
            </div>

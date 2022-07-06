@@ -31,7 +31,7 @@ public class MemberController {
         return "app/members/new";
     }
 
-    @PostMapping("/new")
+    @PostMapping("")
     public String create(@Valid @ModelAttribute RegisterVo registerVo, BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){

@@ -5,6 +5,11 @@
 
 
     <ul class="pagination justify-content-center">
+        <li class="page-item" th:if="${pagination.pageNumber > 0}">
+            <a class="page-link" th:href="@{'/post?page=' + ${pagination.pageNumber}}" aria-label="Previous">
+                <span aria-hidden="true">이전</span>
+            </a>
+        </li>
         <th:block th:if="${pagination.totalPages < 5}"
                   th:each="i : ${#numbers.sequence(0, pagination.totalPages - 1)}">
             <li th:if="${i >= 0 && i < pagination.totalPages}" class="page-item"
@@ -19,6 +24,11 @@
                 <a th:href="@{/posts/(page=${i})}" th:text="${i+1}" class="page-link"></a>
             </li>
         </th:block>
+        <li class="page-item" th:if="${pagination.pageNumber < pagination.totalPages - 1}">
+            <a class="page-link" th:href="@{'/post?page=' + ${pagination.pageNumber + 2}}" aria-label="Next">
+                <span aria-hidden="true">다음</span>
+            </a>
+        </li>
     </ul>
 
 

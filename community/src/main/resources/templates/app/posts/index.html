@@ -4,38 +4,43 @@
 <head></head>
 <body>
 
-<div layout:fragment="content" class="container">
+<div layout:fragment="content" class="container-fluid">
+
 
     <div class="p-3 align-items-center mb-4 ">
+        <div class="mb-3 justify-content-end d-flex">
+            <a th:href="@{/posts/new}" class=" d-sm-inline-block btn btn-md btn-primary shadow-sm">작성하기</a>
+        </div>
         <table class="table table-hover text-center">
             <thead>
             <tr>
                 <th style="width: 10%">번호</th>
-                <th style="width: 30%">제목</th>
+                <th style="width: 40%">제목</th>
                 <th style="width: 20%">작성자</th>
-                <th style="width: 30%">작성일</th>
-                <th style="width: 10%">조회수</th>
+                <th style="width: 20%">작성일</th>
+                <th style="width: 20%">조회수</th>
             </tr>
             </thead>
             <tbody>
-            <tr class="clickable-row" th:each="post : ${postList}" th:attr="data-url=@{'/posts/' + ${post.getId()}} ">
+            <tr class="clickable-row" th:each="post, iter : ${postPage}" th:attr="data-url=@{'/posts/' + ${post.id}} ">
                 <td th:text="${post.id}"></td>
                 <td th:text="${post.title}"></td>
-                <td th:text="${post.member.getUsername()}"></td>
-                <td th:text="${#dates.format(post.getUpdatedAt(), 'yyyy-MM-dd')}"></td>
+                <td th:text="${post.member.username}"></td>
+                <td th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd')}"></td>
                 <td th:text="${post.view_cnt}"></td>
             </tr>
             </tbody>
         </table>
-        <a th:href="@{/posts/new}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">작성하기</a>
+        <div th:replace="fragment/pagination :: pagination">
+        </div>
 
     </div>
     <script>
-        $('.clickable-row').click(function(e){
+        $('.clickable-row').click(function (e) {
             let row = e.target.parentNode;
             location.href = row.getAttribute('data-url');
         });
     </script>
-    </div>
+</div>
 </body>
 </html>

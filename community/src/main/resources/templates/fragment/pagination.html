@@ -1,0 +1,27 @@
+<!DOCTYPE>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="pagination">
+
+
+    <ul class="pagination justify-content-center">
+        <th:block th:if="${pagination.totalPages < 5}"
+                  th:each="i : ${#numbers.sequence(0, pagination.totalPages - 1)}">
+            <li th:if="${i >= 0 && i < pagination.totalPages}" class="page-item"
+                th:classappend="${pagination.pageNumber == i ? 'active' : ''}">
+                <a th:href="@{/posts/(page=${i})}" th:text="${i+1}" class="page-link"></a>
+            </li>
+        </th:block>
+        <th:block th:unless="${pagination.totalPages < 5}"
+                  th:each="i : ${#numbers.sequence(pagination.pageNumber -2 , pagination.pageNumber+2)}">
+            <li th:if="${i >= 0 && i < pagination.totalPages}" class="page-item"
+                th:classappend="${pagination.pageNumber == i ? 'active' : ''}">
+                <a th:href="@{/posts/(page=${i})}" th:text="${i+1}" class="page-link"></a>
+            </li>
+        </th:block>
+    </ul>
+
+
+</div>
+
+</html>

@@ -3,21 +3,23 @@ package kr.co.community.controller;
 import kr.co.community.dto.PostDto;
 import kr.co.community.handler.GlobalExceptionHandler;
 import kr.co.community.model.Member;
+import kr.co.community.model.Pagination;
 import kr.co.community.model.Post;
 import kr.co.community.service.MemberService;
 import kr.co.community.service.PostService;
 import kr.co.community.vo.PostVo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Objects;
 
 @Controller
 @RequestMapping("/posts")
@@ -28,10 +30,15 @@ public class PostController {
     private final GlobalExceptionHandler globalExceptionHandler;
 
     @GetMapping("")
-    public String index(Model model){
+    public String index(Model model, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+        Page<Post> postPage = postService.findAll(pageable);
+        Pagination pagination = new Pagination(pageable);
+        pagination.setTotalPages(postPage.getTotalPages());
+        pagination.setTotalElements(postPage.getTotalElements());
 
-        List<Post> postList = postService.findAll();
-        model.addAttribute("postList", postList);
+        model.addAttribute("postPage", postPage.getContent());
+        model.addAttribute("pagination", pagination);
+
         return "app/posts/index";
     }
 
@@ -49,7 +56,7 @@ public class PostController {
         return "app/posts/show";
     }
 
-    @PostMapping("/")
+    @PostMapping("/new")
     public String create(@ModelAttribute PostVo postVo, Principal principal){
         Member currentMember = memberService.findByEmail(principal.getName());
         Post post = Post.builder().title(postVo.getTitle())
@@ -60,7 +67,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(@PathVariable("id")Long id, Model model, Principal principal) throws Exception {
+    public String edit(@PathVariable("id")Long id, Principal principal, Model model) throws Exception {
         Post post = postService.findById(id);
         Member currentMember = memberService.findByEmail(principal.getName());
         if(!post.isWriter(currentMember)){
@@ -83,7 +90,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete (@PathVariable("id") Long id, Model model, Principal principal) throws Exception {
+    public String delete (@PathVariable("id") Long id, Principal principal, Model model) throws Exception {
         Post post = postService.findById(id);
         Member currentMember = memberService.findByEmail(principal.getName());
         if(!post.isWriter(currentMember)){

@@ -9,6 +9,7 @@ import kr.co.community.service.PostService;
 import kr.co.community.vo.CommentVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -22,8 +23,8 @@ public class CommentController {
     private final MemberService memberService;
 
     @PostMapping("")
-    public String create(@ModelAttribute CommentVo commentvo, Principal principal){
-        Post post = postService.findById(commentvo.getPostId());
+    public String create(@ModelAttribute CommentVo commentvo, Long id, Principal principal){
+        Post post = postService.findById(id);
         Member currentMember = memberService.findByEmail(principal.getName());
         Comment comment = new Comment(commentvo);
         comment.setMember(currentMember);
@@ -31,6 +32,15 @@ public class CommentController {
 
         commentService.save(comment);
         return "redirect:/posts/"+post.getId();
+    }
+
+    @PutMapping("/{id}/edit")
+    public String edit(@PathVariable("id")Long id, @ModelAttribute CommentVo commentVo){
+        Comment comment = commentService.findById(id);
+        comment.update(commentVo.getContent());
+        commentService.save(comment);
+
+        return "redirect:/posts/" + comment.getPost().getId();
     }
 
     @DeleteMapping("/{id}")

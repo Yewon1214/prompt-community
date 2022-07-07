@@ -8,79 +8,101 @@
 
     <div class="p-3 align-items-center mb-4">
 
-        <div sec:authorize="isAuthenticated()"  class="row mb-3 justify-content-end" >
-            <div style="width: 7%">
-                <a th:href="@{'/posts/' + ${post.getId()} + '/edit'}" class=" d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm d-inline" >수정</a>
+        <div sec:authorize="isAuthenticated()">
+            <div th:if="${#strings.equals(post.member.username, #authentication.getPrincipal().getMember().getUsername())}"
+                 class="row mb-3 justify-content-end">
+                <div style="width: 7%" class="d-inline">
+                    <a th:href="@{'/posts/' + ${post.getId()} + '/edit'}"
+                       class="d-sm-inline-block btn btn-sm btn-success shadow-sm d-inline">수정</a>
+                </div>
+                <form id="delete-form" method="post" th:action="@{'/posts/' + ${post.id}}" class="p-0"
+                      style="width: 5%">
+                    <input type="hidden" name="_method" value="delete">
+                    <input type="submit" class="d-none d-sm-inline-block btn btn-sm btn-danger" value="삭제">
+                </form>
             </div>
-            <form id="delete-form" method="post" th:action="@{'/posts/' + ${post.id}}" class="p-0" style="width: 5%">
-                <input type="hidden" name="_method" value="delete">
-                <input type="submit" class="d-none d-sm-inline-block btn btn-sm btn-primary" value="삭제">
-            </form>
         </div>
-        <table class="table table-bordered text-center">
+        <table id="post" class="table table-bordered text-center">
 
             <tbody>
-                <tr>
-                    <th>제목</th>
-                    <td th:text="${post.getTitle()}"></td>
-                </tr>
+            <tr>
+                <th>제목</th>
+                <td th:text="${post.getTitle()}"></td>
+            </tr>
             <tr>
                 <th>작성자</th>
                 <td th:text="${post.getMember().getUsername()}"></td>
             </tr>
-                <tr>
-                    <th>작성일</th>
-                    <td th:text="${#dates.format(post.getUpdatedAt(), 'yyyy.MM.dd HH:mm')}"></td>
-                </tr>
-                <tr>
-                    <th>조회수</th>
-                    <td th:text="${post.getView_cnt()}"></td>
-                </tr>
             <tr>
-                <td colspan="2" th:utext="${post.getContent()}" class="text-left card-body"></td>
+                <th>작성일</th>
+                <td th:text="${#dates.format(post.getUpdatedAt(), 'yyyy.MM.dd HH:mm')}"></td>
+            </tr>
+            <tr>
+                <th>조회수</th>
+                <td th:text="${post.getView_cnt()}"></td>
+            </tr>
+            <tr>
+                <td id="content" colspan="2" th:utext="${post.getContent()}" class=" card-body"></td>
             </tr>
 
             </tbody>
 
         </table>
 
-        <div class="mb-3 card">
+        <div id="comment" class="mb-3 card">
+            <div class="card-header"><h6>댓글</h6></div>
             <th:block th:if="${post.comments != null}" th:each="comment : ${comments}">
-                <ul class="list-group-flush card-group">
-                    <li class="list-group-item card-group">
-                        <span>
-                            <span style="font-size: small" th:text="${comment.member.username}"></span>
-                            <span style="font-size: xx-small" th:text="${#dates.format(comment.createdAt, 'yyyy-MM-dd hh:mm')}"></span>
-                            <form th:object="${comment.id}" th:action="@{'/comments/' + ${comment.id}}" th:method="delete" class="d-inline">
-                                <button class="btn-danger btn btn-sm">삭제</button>
-                            </form>
-                        </span>
-                        <div th:text="${comment.content}"></div>
 
+                <ul class="list-group-flush card-group">
+                    <li class="list-group-item">
+                        <span>
+                            <span id="username" th:text="${comment.member.username}"></span>
+                            <span id="date" th:text="${#dates.format(comment.createdAt, 'yyyy-MM-dd hh:mm')}"></span>
+                            <div sec:authorize="isAuthenticated()" class="d-inline">
+                                <th:block th:if="${#strings.equals(comment.member.username, #authentication.getPrincipal().getMember().getUsername())}">
+                                    <button type="button" class="btn btn-sm btn-success" data-bs-toggle="collapse"
+                                            th:attr="data-bs-target='#collapseComment'+${comment.id}"
+                                            aria-expanded="false">수정</button>
+                                    <form th:object="${comment.id}" th:action="@{'/comments/' + ${comment.id}}"
+                                          th:method="delete" class="d-inline">
+                                        <button class="btn-danger btn btn-sm">삭제</button>
+                                    </form>
+                                </th:block>
+
+                            </div>
+                        </span>
+                        <div class="collapse show" th:id="'collapseComment'+${comment.id}" th:text="${comment.content}"></div>
+                        <div class="collapse mt-2" th:id="'collapseComment'+${comment.id}">
+                            <form th:object="${comment}" th:action="@{'/comments/' + ${comment.id} + '/edit'}" th:method="put">
+                                <textarea th:name="content" class="form-control " rows="3"  th:text="${comment.content}"></textarea>
+                                <button type="submit" class="btn btn-primary btn-sm mt-2">수정</button>
+                            </form>
+                        </div>
                     </li>
                 </ul>
-
+                <hr class="m-0">
             </th:block>
-
-
         </div>
 
-        <div class="card mb-3">
-            <h5>댓글</h5>
-            <div class="card-header">
-                <th:block sec:authorize="isAuthenticated()">
-                    <form th:action="@{/comments}" method="post" class="form-floating" th:object="${commentVo}">
-                        <textarea th:name="content" class="form-control" placeholder="댓글을 남겨보세요" id="comment-input"></textarea>
-                        <label for="comment-input">댓글을 남겨보세요.</label>
-                        <input type="hidden" name="postId" th:value="${post.id}">
-                        <button type="submit" class="btn btn-primary btn-sm mt-2">등록</button>
-                    </form>
 
-                </th:block>
-                <th:block sec:authorize="isAnonymous()">
-                    <h6>댓글을 작성하려면 <a th:href="@{/member/login}">로그인</a> 하세요.</h6>
-                </th:block>
-            </div>
+        <div class="card mb-3">
+            <div class="card-header"><h6>댓글작성</h6></div>
+            <th:block sec:authorize="isAuthenticated()">
+                <form th:object="${comment}" th:action="@{/comments}" method="post" class="form-floating m-0" >
+                    <div class="card-body">
+                        <textarea th:name="content" class="form-control" placeholder="댓글을 남겨보세요"></textarea>
+                        <input type="hidden" name="id" th:value="${post.id}">
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-outline-primary btn-sm">등록</button>
+                    </div>
+                </form>
+
+            </th:block>
+            <th:block sec:authorize="isAnonymous()">
+                <div class="card-body"><h6>댓글을 작성하려면 <a th:href="@{/member/login}">로그인</a> 하세요.</h6></div>
+            </th:block>
+
         </div>
 
         <a th:href="@{/posts}" class="d-none d-sm-inline-block btn btn-mg btn-primary shadow-sm">목록으로</a>
@@ -92,5 +114,10 @@
 
 </div>
 
+<th:block layout:fragment="script">
+    <script>
+
+    </script>
+</th:block>
 </body>
 </html>

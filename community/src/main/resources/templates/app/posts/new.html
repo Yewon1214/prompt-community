@@ -10,18 +10,18 @@
         <div class="align-items-center mb-4">
             <h1 class="h3 text-gray-800">글쓰기</h1>
         </div>
-       <form th:action="@{${postVo.id == null ? '/posts' : '/posts/'+postVo.id+'/edit'}}" th:method="${postVo.id == null ? 'post' : 'put'}" th:object="${postVo}">
-           <div class="form-group">
-               <input type="text" th:field="*{title}" placeholder="제목" class="form-control">
-           </div>
-           <div class="form-group">
-               <textarea id="summernote" type="text" th:field="*{content}" class="form-control"></textarea>
-           </div>
-           <hr>
+        <form th:action="@{${postVo.id == null ? '/posts' : '/posts/'+postVo.id+'/edit'}}" th:method="${postVo.id == null ? 'post' : 'put'}" th:object="${postVo}">
+            <div class="form-group">
+                <input type="text" th:field="*{title}" placeholder="제목" class="form-control">
+            </div>
+            <div class="form-group">
+                <textarea id="summernote" type="text" th:field="*{content}" class="form-control"></textarea>
+            </div>
+            <hr>
 
-           <button type="submit" class="btn btn-primary btn-user btn-block" th:text="${postVo.id==null ? '등록하기' : '수정하기'}"></button>
+            <button type="submit" class="btn btn-primary btn-user btn-block" th:text="${postVo.id==null ? '등록하기' : '수정하기'}"></button>
 
-       </form>
+        </form>
     </div>
 
 </div>

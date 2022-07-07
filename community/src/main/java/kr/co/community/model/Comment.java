@@ -48,4 +48,8 @@ public class Comment {
     public boolean isWriter(Member currentMember){
         return this.member.getUsername().equals(currentMember.getUsername());
     }
+
+    public void update(String content){
+        this.content=content;
+    }
 }

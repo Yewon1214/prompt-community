@@ -16,37 +16,40 @@
                 <div class="card-body p-0">
                     <!-- Nested Row within Card Body -->
 
-                        <div>
-                            <div class="p-5">
-                                <div class="text-center">
-                                    <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
-                                </div>
-                                <form th:action="@{/member/login}" th:method="post" class="user">
-
-                                    <th:block th:if="${param.error != null}" >
-                                        <div th:replace="fragment/alert :: alert(type='danger', message='아이디 또는 비밀번호가 올바르지 않습니다.')" class="form-group">Alert</div>
-                                    </th:block>
-
-                                    <div class="form-group">
-                                        <input name="username" type="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
-                                    </div>
-                                    <div class="form-group">
-                                        <input name="password" type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
-                                    </div>
-
-                                    <button type="submit" class="btn btn-primary btn-user btn-block">
-                                        Login
-                                    </button>
-                                    <hr>
-                                    <div class="text-center">
-                                        <a th:href="@{/member/new}" class="small" >Create an Account!</a>
-                                    </div>
-
-                                </form>
-
-
+                    <div>
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                             </div>
+                            <form th:action="@{/member/login}" th:method="post" class="user">
+
+                                <th:block th:if="${param.error != null}" >
+                                    <div th:replace="fragment/alert :: alert(type='danger', message='아이디 또는 비밀번호가 올바르지 않습니다.')" class="form-group">Alert</div>
+                                </th:block>
+
+                                <div class="form-group">
+                                    <input name="username" type="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
+                                </div>
+                                <div class="form-group">
+                                    <input name="password" type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-user btn-block">
+                                    Login
+                                </button>
+                                <hr>
+                                <div class="text-center mb-1">
+                                    <a th:href="@{/member/new}" class="small" >Create an Account!</a>
+                                </div>
+                                <div class="text-center">
+                                    <a th:href="@{/}" class="small" >Back to Home!</a>
+                                </div>
+
+                            </form>
+
+
                         </div>
+                    </div>
 
                 </div>
             </div>

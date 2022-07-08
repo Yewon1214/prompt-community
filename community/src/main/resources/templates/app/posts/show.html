@@ -53,7 +53,7 @@
             <div class="card-header"><h6>댓글</h6></div>
             <th:block th:if="${post.comments != null}" th:each="comment : ${comments}">
 
-                <ul class="list-group-flush card-group">
+                <ul class="list-group-flush">
                     <li class="list-group-item">
                         <span>
                             <span id="username" th:text="${comment.member.username}"></span>
@@ -73,8 +73,9 @@
                         </span>
                         <div class="collapse show" th:id="'collapseComment'+${comment.id}" th:text="${comment.content}"></div>
                         <div class="collapse mt-2" th:id="'collapseComment'+${comment.id}">
-                            <form th:object="${comment}" th:action="@{'/comments/' + ${comment.id} + '/edit'}" th:method="put">
-                                <textarea th:name="content" class="form-control " rows="3"  th:text="${comment.content}"></textarea>
+                            <form th:object="${commentVo}" th:action="@{'/comments/' + ${comment.id} + '/edit'}" th:method="put" class="pr-2">
+                                <textarea th:name="content" class="form-control" maxlength="500" id="commentContent2" th:text="${comment.content}" required></textarea>
+                                <span id="counter2" style="color:#aaa;" th:value="'('+${comment.content.length()}+' / 500)'"></span>
                                 <button type="submit" class="btn btn-primary btn-sm mt-2">수정</button>
                             </form>
                         </div>
@@ -88,10 +89,12 @@
         <div class="card mb-3">
             <div class="card-header"><h6>댓글작성</h6></div>
             <th:block sec:authorize="isAuthenticated()">
-                <form th:object="${comment}" th:action="@{/comments}" method="post" class="form-floating m-0" >
+                <form th:object="${commentVo}" th:action="@{/comments}" method="post" class="form-floating m-0" >
+
                     <div class="card-body">
-                        <textarea th:name="content" class="form-control" placeholder="댓글을 남겨보세요"></textarea>
+                        <textarea id="commentContent" th:field="*{content}" class="form-control" maxlength="500" placeholder="댓글을 남겨보세요" required></textarea>
                         <input type="hidden" name="id" th:value="${post.id}">
+                        <span id="counter" style="color:#aaa;">(0 / 500)</span>
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-outline-primary btn-sm">등록</button>
@@ -116,7 +119,14 @@
 
 <th:block layout:fragment="script">
     <script>
-
+        $('#commentContent').keyup(function (e){
+            var content=$(this).val();
+            $('#counter').html("("+content.length+" / 500)");
+        });
+        $('#commentContent2').keyup(function (e){
+            var content=$(this).val();
+            $('#counter2').html("("+content.length+" / 500)");
+        });
     </script>
 </th:block>
 </body>

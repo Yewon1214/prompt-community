@@ -7,6 +7,7 @@ import kr.co.community.model.Pagination;
 import kr.co.community.model.Post;
 import kr.co.community.service.MemberService;
 import kr.co.community.service.PostService;
+import kr.co.community.vo.CommentVo;
 import kr.co.community.vo.PostVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -76,6 +77,7 @@ public class PostController {
 
         postService.updateView(id);
         model.addAttribute("post", post);
+        model.addAttribute("commentVo", new CommentVo());
         return "app/posts/show";
     }
 

@@ -10,8 +10,11 @@ import kr.co.community.vo.CommentVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.Binding;
+import javax.validation.Valid;
 import java.security.Principal;
 
 @Controller
@@ -23,13 +26,11 @@ public class CommentController {
     private final MemberService memberService;
 
     @PostMapping("")
-    public String create(Principal principal, @ModelAttribute CommentVo commentvo, Long id) throws Exception {
-        if(commentvo.getContent().equals("")){
-            throw new Exception("댓글의 내용은 빈칸일 수 없습니다.");
-        }
+    public String create(Principal principal, Long id, @Valid @ModelAttribute CommentVo commentVo) throws Exception {
+
         Post post = postService.findById(id);
         Member currentMember = memberService.findByEmail(principal.getName());
-        Comment comment = new Comment(commentvo);
+        Comment comment = new Comment(commentVo);
         comment.setMember(currentMember);
         comment.setPost(post);
 

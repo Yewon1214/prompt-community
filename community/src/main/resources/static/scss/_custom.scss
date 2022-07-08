@@ -13,3 +13,7 @@
     text-align: center;
   }
 }
+
+.note-btn.dropdown-toggle:after {
+  content: none;
+}

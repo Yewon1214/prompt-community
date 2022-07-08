@@ -1,6 +1,6 @@
 package kr.co.community.controller;
 
-import kr.co.community.vo.RegisterVo;
+import kr.co.community.vo.MemberVo;
 import kr.co.community.model.Member;
 import kr.co.community.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -26,18 +26,18 @@ public class MemberController {
     }
 
     @GetMapping("/new")
-    public String newMember(Model model){
-        model.addAttribute("registerVo", new RegisterVo());
+    public String create(Model model){
+        model.addAttribute("memberVo", new MemberVo());
         return "app/members/new";
     }
 
     @PostMapping("")
-    public String create(@Valid @ModelAttribute RegisterVo registerVo, BindingResult bindingResult){
+    public String save(@Valid @ModelAttribute MemberVo memberVo, BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){
             return "app/members/new";
         }
-        Member member = registerVo.toEntity();
+        Member member = memberVo.toEntity();
 
         memberService.save(member);
         return "redirect:/member/login";

@@ -14,7 +14,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final SecurityHandler securityHandler;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -26,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/member/login")
-                .defaultSuccessUrl("/")
+                .defaultSuccessUrl("/posts")
                 .failureUrl("/member/login?error=1")
                 .permitAll()
                 .and()

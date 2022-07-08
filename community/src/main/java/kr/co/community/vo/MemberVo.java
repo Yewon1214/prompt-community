@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
-public class RegisterVo {
+public class MemberVo {
 
     @NotBlank
     @Size(min = 2, max = 20)

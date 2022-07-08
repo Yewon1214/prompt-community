@@ -37,7 +37,7 @@ public class Post {
     @UpdateTimestamp
     private Instant updatedAt;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

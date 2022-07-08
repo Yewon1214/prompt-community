@@ -30,7 +30,8 @@ public class PostService  {
         return postRepository.findAll(pageable);
     }
 
-    public void delete(Long id){
+    @Transactional
+    public void deleteById(Long id){
         postRepository.deleteById(id);
     }
 

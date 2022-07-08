@@ -23,7 +23,10 @@ public class CommentController {
     private final MemberService memberService;
 
     @PostMapping("")
-    public String create(@ModelAttribute CommentVo commentvo, Long id, Principal principal){
+    public String create(Principal principal, @ModelAttribute CommentVo commentvo, Long id) throws Exception {
+        if(commentvo.getContent().equals("")){
+            throw new Exception("댓글의 내용은 빈칸일 수 없습니다.");
+        }
         Post post = postService.findById(id);
         Member currentMember = memberService.findByEmail(principal.getName());
         Comment comment = new Comment(commentvo);
@@ -35,7 +38,7 @@ public class CommentController {
     }
 
     @PutMapping("/{id}/edit")
-    public String edit(@PathVariable("id")Long id, @ModelAttribute CommentVo commentVo){
+    public String update(@PathVariable("id")Long id, @ModelAttribute CommentVo commentVo){
         Comment comment = commentService.findById(id);
         comment.update(commentVo.getContent());
         commentService.save(comment);
@@ -44,14 +47,9 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") Long id, Principal principal) throws Exception {
+    public String delete(@PathVariable("id") Long id) throws Exception {
         Comment comment = commentService.findById(id);
         Post post = postService.findById(comment.getPost().getId());
-        Member currentMember = memberService.findByEmail(principal.getName());
-
-        if(!comment.isWriter(currentMember)){
-            throw new Exception("삭제 권한이 없습니다.");
-        }
 
         commentService.delete(comment);
         return "redirect:/posts/" + post.getId();

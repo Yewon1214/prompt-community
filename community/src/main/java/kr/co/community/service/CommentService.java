@@ -13,18 +13,18 @@ import java.util.Optional;
 public class CommentService {
     private final CommentRepository commentRepository;
 
-    @Transactional
-    public void save(Comment comment) {
-        commentRepository.save(comment);
-    }
-
     public Comment findById(Long id) {
         Optional<Comment> comment = commentRepository.findById(id);
         return comment.orElse(null);
     }
 
     @Transactional
-    public void delete(Comment comment) {
+    public void saveComment(Comment comment) {
+        commentRepository.save(comment);
+    }
+
+    @Transactional
+    public void deleteComment(Comment comment) {
         commentRepository.delete(comment);
     }
 }

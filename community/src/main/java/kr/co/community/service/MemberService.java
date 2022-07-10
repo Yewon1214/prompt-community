@@ -60,8 +60,12 @@ public class MemberService implements UserDetailsService {
         }
     }
 
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email);
+    }
+
     @Transactional
-    public void save(Member vo){
+    public void saveMember(Member vo){
         Member member = Member.builder()
                         .email(vo.getEmail())
                                 .password(bCryptPasswordEncoder.encode(vo.getPassword()))
@@ -85,16 +89,4 @@ public class MemberService implements UserDetailsService {
         return new MemberAdapter(member);
     }
 
-    public Member findByUserName(String username){
-        Member member = memberRepository.findByUsername(username);
-        if(Objects.isNull(member)){
-
-            throw new UsernameNotFoundException("Member not found");
-        }
-        return member;
-    }
-
-    public Member findByEmail(String email) {
-        return memberRepository.findByEmail(email);
-    }
 }

@@ -4,7 +4,9 @@ import kr.co.community.model.Post;
 import kr.co.community.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -17,7 +19,7 @@ public class PostService  {
 
 
     @Transactional
-    public void save(Post post) {
+    public void savePost(Post post) {
         postRepository.save(post);
     }
 
@@ -31,12 +33,17 @@ public class PostService  {
     }
 
     @Transactional
+    public void updateView(Long id) {
+        postRepository.updateView(id);
+    }
+
+    @Transactional
     public void deleteById(Long id){
         postRepository.deleteById(id);
     }
 
-    @Transactional
-    public int updateView(Long id) {
-        return postRepository.updateView(id);
+    public Page<Post> getPageList(Pageable pageable, int pageNo, String orderBy) {
+        pageable = PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, orderBy));
+        return postRepository.findAll(pageable);
     }
 }

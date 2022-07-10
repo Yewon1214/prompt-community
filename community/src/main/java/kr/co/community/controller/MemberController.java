@@ -39,7 +39,7 @@ public class MemberController {
         }
         Member member = memberVo.toEntity();
 
-        memberService.save(member);
+        memberService.saveMember(member);
         return "redirect:/member/login";
     }
 }

@@ -13,6 +13,13 @@
             <h3 class="ml-3">자유게시판</h3>
             <a th:href="@{/posts/new}" class=" d-sm-inline-block btn btn-md btn-primary shadow-sm">작성하기</a>
         </div>
+        <div class="mb-3 justify-content-end">
+            <a class="btn btn-primary"
+               th:href="@{'/posts'+'?orderBy=viewCnt'}">조회수 순</a>
+            <a class="btn btn-primary"
+               th:href="@{'/posts'+'?orderBy=createdAt'}">최신 순</a>
+
+        </div>
         <table class="table table-hover text-center">
             <caption></caption>
             <thead>
@@ -30,7 +37,7 @@
                 <td th:text="${post.title}"></td>
                 <td th:text="${post.member.username}"></td>
                 <td th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd')}"></td>
-                <td th:text="${post.view_cnt}"></td>
+                <td th:text="${post.viewCnt}"></td>
             </tr>
             </tbody>
         </table>

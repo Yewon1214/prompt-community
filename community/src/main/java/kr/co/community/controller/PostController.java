@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/posts")
@@ -33,11 +34,16 @@ public class PostController {
     private final GlobalExceptionHandler globalExceptionHandler;
 
     @GetMapping("")
-    public String index(Model model, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
-        Page<Post> postPage = postService.findAll(pageable);
-        Pagination pagination = new Pagination(pageable);
+    public String index(Model model, @RequestParam(required=false, defaultValue = "0", value="page") int pageNo,
+                        @RequestParam(required = false, defaultValue = "id", value = "orderBy")String orderBy,
+                        Pageable pageable) {
+
+//        Page<Post> postPage = postService.findAll(pageable);
+        Page<Post> postPage = postService.getPageList(pageable, pageNo, orderBy);
+        Pagination pagination = new Pagination(postPage.getPageable());
         pagination.setTotalPages(postPage.getTotalPages());
         pagination.setTotalElements(postPage.getTotalElements());
+
 
         model.addAttribute("postPage", postPage.getContent());
         model.addAttribute("pagination", pagination);
@@ -62,13 +68,16 @@ public class PostController {
         Post post = Post.builder().title(postVo.getTitle())
                 .content(postVo.getContent())
                 .member(currentMember).build();
-        postService.save(post);
+        postService.savePost(post);
         return "redirect:/posts/" + post.getId();
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") Long id, Model model){
+    public String show(@PathVariable("id") Long id, Model model) throws Exception {
         Post post = postService.findById(id);
+        if(Objects.isNull(post)){
+            throw new Exception("게시글이 없습니다.");
+        }
         List<Comment> comments = post.getComments();
 
         if(comments !=null && !comments.isEmpty()){
@@ -85,6 +94,9 @@ public class PostController {
     @GetMapping("/{id}/edit")
     public String update(Principal principal, @PathVariable("id")Long id, Model model) throws Exception {
         Post post = postService.findById(id);
+        if(Objects.isNull(post)){
+            throw new Exception("게시글이 없습니다.");
+        }
         Member member = memberService.findByEmail(principal.getName());
         if(!post.isWriter(member)){
             throw new Exception("수정 권한이 없습니다");
@@ -103,7 +115,7 @@ public class PostController {
         Post postForUpdate = postService.findById(id);
 
         postForUpdate.update(postVo);
-        postService.save(postForUpdate);
+        postService.savePost(postForUpdate);
         return "redirect:/posts/"+id;
     }
 

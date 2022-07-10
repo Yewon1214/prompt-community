@@ -18,7 +18,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Optional<Post> findById(Long id);
 
     @Modifying
-    @Query("UPDATE Post p SET p.view_cnt = p.view_cnt+1 WHERE p.id = :id")
+    @Query("UPDATE Post p SET p.viewCnt = p.viewCnt+1 WHERE p.id = :id")
     int updateView(Long id);
 
 }

@@ -34,7 +34,7 @@ public class CommentController {
         comment.setMember(currentMember);
         comment.setPost(post);
 
-        commentService.save(comment);
+        commentService.saveComment(comment);
         return "redirect:/posts/"+post.getId();
     }
 
@@ -42,7 +42,7 @@ public class CommentController {
     public String update(@PathVariable("id")Long id, @ModelAttribute CommentVo commentVo){
         Comment comment = commentService.findById(id);
         comment.update(commentVo.getContent());
-        commentService.save(comment);
+        commentService.saveComment(comment);
 
         return "redirect:/posts/" + comment.getPost().getId();
     }
@@ -52,7 +52,7 @@ public class CommentController {
         Comment comment = commentService.findById(id);
         Post post = postService.findById(comment.getPost().getId());
 
-        commentService.delete(comment);
+        commentService.deleteComment(comment);
         return "redirect:/posts/" + post.getId();
     }
 

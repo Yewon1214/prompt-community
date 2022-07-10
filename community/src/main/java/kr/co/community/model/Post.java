@@ -29,7 +29,7 @@ public class Post {
     @Column(nullable = false, length=1000)
     private String content;
 
-    private int view_cnt;
+    private int viewCnt;
 
     @CreationTimestamp
     private Instant createdAt;

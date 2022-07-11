@@ -1,5 +1,6 @@
 package kr.co.community.repository;
 
+import kr.co.community.model.Member;
 import kr.co.community.model.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,4 +22,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("UPDATE Post p SET p.viewCnt = p.viewCnt+1 WHERE p.id = :id")
     int updateView(Long id);
 
+    Page<Post> findPostsByMember(Member member, Pageable pageable);
 }

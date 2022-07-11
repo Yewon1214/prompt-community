@@ -5,6 +5,7 @@ import kr.co.community.model.Comment;
 import kr.co.community.model.Member;
 import kr.co.community.model.Pagination;
 import kr.co.community.model.Post;
+import kr.co.community.service.CommentService;
 import kr.co.community.service.MemberService;
 import kr.co.community.service.PostService;
 import kr.co.community.vo.CommentVo;
@@ -14,10 +15,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,21 +32,19 @@ import java.util.Objects;
 public class PostController {
     private final PostService postService;
     private final MemberService memberService;
-    private final GlobalExceptionHandler globalExceptionHandler;
+    private  final CommentService commentService;
 
     @GetMapping("")
-    public String index(Model model, @RequestParam(required=false, defaultValue = "0", value="page") int pageNo,
-                        @RequestParam(required = false, defaultValue = "id", value = "orderBy")String orderBy,
-                        Pageable pageable) {
+    public String index(Model model, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
-//        Page<Post> postPage = postService.findAll(pageable);
-        Page<Post> postPage = postService.getPageList(pageable, pageNo, orderBy);
+        Page<Post> postPage = postService.findAll(pageable);
         Pagination pagination = new Pagination(postPage.getPageable());
         pagination.setTotalPages(postPage.getTotalPages());
         pagination.setTotalElements(postPage.getTotalElements());
 
-
+        String[] orderBy = String.valueOf(pageable.getSort()).split(":");
         model.addAttribute("postPage", postPage.getContent());
+        model.addAttribute("orderBy", orderBy[0]);
         model.addAttribute("pagination", pagination);
 
         return "app/posts/index";
@@ -88,6 +87,44 @@ public class PostController {
         model.addAttribute("post", post);
         model.addAttribute("commentVo", new CommentVo());
         return "app/posts/show";
+    }
+
+    @GetMapping("/mypage")
+    public String showMyPage(Model model, Principal principal){
+        Member member = memberService.findByEmail(principal.getName());
+
+        model.addAttribute("member", member);
+        return "app/mypage/index";
+    }
+
+    @GetMapping("/mypage/myposts")
+    public String showMyPost(Model model, Principal principal, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+        Member member = memberService.findByEmail(principal.getName());
+
+        Page<Post> postPage = postService.findByMember(member, pageable);
+        Pagination pagination = new Pagination(pageable);
+        pagination.setTotalElements(postPage.getTotalElements());
+        pagination.setTotalPages(postPage.getTotalPages());
+
+        model.addAttribute("postPage", postPage.getContent());
+        model.addAttribute("pagination", pagination);
+
+        return "app/mypage/myposts";
+    }
+
+    @GetMapping("/mypage/mycomments")
+    public String showMyComments(Model model, Principal principal, @PageableDefault(sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
+        Member member = memberService.findByEmail(principal.getName());
+
+        Page<Comment> commentPage = commentService.findByMember(member, pageable);
+        Pagination pagination = new Pagination(pageable);
+        pagination.setTotalPages(commentPage.getTotalPages());
+        pagination.setTotalElements(commentPage.getTotalElements());
+
+        model.addAttribute("commentPage", commentPage);
+        model.addAttribute("pagination", pagination);
+
+        return "app/mypage/mycomments";
     }
 
 

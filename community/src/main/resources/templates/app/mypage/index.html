@@ -1,0 +1,38 @@
+<!DOCTYPE>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic}" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head></head>
+<body>
+
+<div layout:fragment="content" class="container-fluid">
+
+
+    <div class="p-3 align-items-center mb-4 ">
+
+        <div class="mb-3 justify-content-between d-flex">
+            <h3 class="ml-3" >마이페이지</h3>
+        </div>
+        <div class="mb-3 justify-content-end">
+            <a class="btn btn-primary"
+               th:href="@{/posts/mypage/myposts}">내가 쓴 글 보기</a>
+            <a class="btn btn-primary"
+               th:href="@{/posts/mypage/mycomments}">내가 쓴 댓글 보기</a>
+        </div>
+        <div class="col-xl-4 card mb-4 mb-xl-0">
+            <div class="card-header">내 프로필</div>
+            <div class="card-body text-center">
+
+                <img class="img-account-profile rounded-circle mb-2" src="/img/undraw_profile.svg" alt="">
+
+                <div class="small font-italic mb-4" >
+                    <h5 th:text="'username: '+${#authentication.getPrincipal().getMember().getUsername()}"></h5>
+                    <h5 th:text="'email: '+${#authentication.getPrincipal().getMember().getEmail()}"></h5>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

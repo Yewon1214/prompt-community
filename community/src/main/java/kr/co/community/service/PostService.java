@@ -1,5 +1,6 @@
 package kr.co.community.service;
 
+import kr.co.community.model.Member;
 import kr.co.community.model.Post;
 import kr.co.community.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,10 @@ public class PostService  {
         return postRepository.findAll(pageable);
     }
 
+    public Page<Post> findByMember(Member member, Pageable pageable) {
+        return postRepository.findPostsByMember(member, pageable);
+    }
+
     @Transactional
     public void updateView(Long id) {
         postRepository.updateView(id);
@@ -42,8 +47,4 @@ public class PostService  {
         postRepository.deleteById(id);
     }
 
-    public Page<Post> getPageList(Pageable pageable, int pageNo, String orderBy) {
-        pageable = PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, orderBy));
-        return postRepository.findAll(pageable);
-    }
 }

@@ -13,11 +13,18 @@
             <h3 class="ml-3">자유게시판</h3>
             <a th:href="@{/posts/new}" class=" d-sm-inline-block btn btn-md btn-primary shadow-sm">작성하기</a>
         </div>
-        <div class="mb-3 justify-content-end">
-            <a class="btn btn-primary"
-               th:href="@{'/posts'+'?orderBy=viewCnt'}">조회수 순</a>
-            <a class="btn btn-primary"
-               th:href="@{'/posts'+'?orderBy=createdAt'}">최신 순</a>
+        <div class="mb-3 justify-content-end d-flex">
+<!--            th:onchange="'window.location.href = \'' + @{/posts} + '?size=\' + this.value +' + '\'&sort=' + __${orderBy}__ + ',desc\''"-->
+            <select class="custom-select w-25 custom-select-sm mr-2" onchange="pageSizeChange(this)">
+                <option value="5" th:selected="${pagination.pageSize == 5}">5</option>
+                <option value="10" th:selected="${pagination.pageSize == 10}">10</option>
+                <option value="20" th:selected="${pagination.pageSize == 20}">20</option>
+            </select>
+
+            <a class="btn btn-primary mr-2"
+               th:href="@{'/posts?page='+${pagination.pageNumber}+'&size='+${pagination.pageSize}+'&sort=viewCnt,desc'}">조회수 순</a>
+            <a class="btn btn-primary mr-2"
+               th:href="@{'/posts?page='+${pagination.pageNumber}+'&size='+${pagination.pageSize}+'&sort=createdAt,desc'}">최신 순</a>
 
         </div>
         <table class="table table-hover text-center">
@@ -45,11 +52,20 @@
         </div>
 
     </div>
-    <script>
+    <script th:inline="javascript">
         $('.clickable-row').click(function (e) {
             let row = e.target.parentNode;
             location.href = row.getAttribute('data-url');
         });
+
+        function pageSizeChange(e){
+            var select = $(e).val();
+            /*<![CDATA[*/
+            var orderBy = /*[[ ${orderBy} ]]*/;
+            /*]]*/
+
+            window.location.href = '/posts?size='+select+'&sort='+orderBy+',desc';
+        }
     </script>
 </div>
 </body>

@@ -48,8 +48,14 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") Long id) throws Exception {
+    public String delete(@PathVariable("id") Long id, Principal principal) throws Exception {
         Comment comment = commentService.findById(id);
+        Member member = memberService.findByEmail(principal.getName());
+
+        if(comment.getMember() != member) {
+            throw new Exception("삭제 권한이 없습니다.");
+        }
+
         Post post = postService.findById(comment.getPost().getId());
 
         commentService.deleteComment(comment);

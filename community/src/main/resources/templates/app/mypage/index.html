@@ -25,8 +25,9 @@
                 <img class="img-account-profile rounded-circle mb-2" src="/img/undraw_profile.svg" alt="">
 
                 <div class="small font-italic mb-4" >
-                    <h5 th:text="'username: '+${#authentication.getPrincipal().getMember().getUsername()}"></h5>
-                    <h5 th:text="'email: '+${#authentication.getPrincipal().getMember().getEmail()}"></h5>
+                    <h5 th:text="'username: '+${member.username}"></h5>
+                    <h5 th:text="'email: '+${member.email}"></h5>
+                    <a class="btn btn-primary" type="submit" th:href="@{/member/checkpwdview}">내 정보 수정</a>
                 </div>
 
 

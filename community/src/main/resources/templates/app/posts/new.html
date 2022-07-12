@@ -6,7 +6,7 @@
 
 <div layout:fragment="content" class="row justify-content-center">
 
-    <div class="p-5 ">
+    <div class="p-5 container">
 
         <div class="align-items-center mb-4">
             <h1 class="h3 text-gray-800">글쓰기</h1>
@@ -26,8 +26,10 @@
                 </div>
             <hr>
 
-            <button type="submit" class="btn btn-primary btn-user btn-block" th:text="${postVo.id==null ? '등록하기' : '수정하기'}"></button>
-
+            <div class="justify-content-between d-flex">
+                <a class="btn btn-primary btn-user" th:href="@{/posts}">목록으로</a>
+                <button type="submit" class=" btn btn-primary btn-user" th:text="${postVo.id==null ? '등록하기' : '수정하기'}"></button>
+            </div>
         </form>
     </div>
 

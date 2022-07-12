@@ -28,8 +28,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="clickable-row" th:each="comment, iter : ${commentPage}" th:attr="data-url=@{'/member/' + ${comment.post.id}} ">
-                <td th:text="${comment.id}"></td>
+            <tr class="clickable-row" th:each="comment, iter : ${commentPage}" th:attr="data-url=@{'/posts/' + ${comment.post.id}} ">
+                <td th:text="${pagination.getTotalElements()-(pagination.pageNumber*pagination.pageSize + iter.index)}"></td>
                 <td th:text="${comment.content}"></td>
                 <td th:text="${#dates.format(comment.createdAt, 'yyyy-MM-dd')}"></td>
             </tr>
@@ -37,7 +37,7 @@
         </table>
         <div>
             <ul class="pagination justify-content-center">
-                <li class="page-item" th:if="${pagination.pageNumber > 0}">
+                <li class="page-item pointer" th:if="${pagination.pageNumber > 0}">
                     <a class="page-link" th:href="@{'/member/mypage/mycomment?page=' + ${pagination.pageNumber -1}}" aria-label="Previous">
                         <span aria-hidden="true">이전</span>
                     </a>

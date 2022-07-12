@@ -1,0 +1,90 @@
+<!DOCTYPE>
+<html lagn="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/auth}">
+
+<body layout:fragment="content" class="bg-gradient-primary">
+<div class="container">
+
+
+    <div class="row justify-content-center">
+
+        <div class="col-xl-10 col-lg-12 col-md-9">
+
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+
+                    <div class="p-5">
+                        <div class="text-center">
+                            <h1 class="h4 text-gray-900 mb-4">회원정보수정</h1>
+                        </div>
+                        <form th:action="@{/member/edit}" th:object="${memberVo}" th:method="put" class="user">
+                            <input type="hidden" th:id="userId" th:value="*{id}">
+                            <div class="form-group">
+                                <label style="font-weight: bold" th:for="username">이름</label>
+                                <input type="text" th:field="*{username}" th:value="*{username}" name="username" class="form-control form-control-user"
+                                       th:id="username" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label style="font-weight: bold" th:for="email">아이디</label>
+                                <input type="text" th:field="*{email}" th:value="*{email}" name="email" class="form-control form-control-user"
+                                       th:id="email" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="font-weight: bold" th:for="password">변경할 비밀번호 입력</label>
+                                <input type="password" th:id="password" th:name="password"
+                                       placeholder="변경할 비밀번호를 입력하세요." class="form-control form-control-user" >
+                            </div>
+                            <button id="memberUpdate" class="btn btn-primary btn-user btn-block" value="회원 정보 수정"
+                                    th:onclick="memberUpdate()">회원 정보 수정</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        function memberUpdate(){
+            const member = {
+                id: $('#userId').val(),
+                username: $('#username').val(),
+                email: $('#email').val(),
+                password: $('#password').val()
+            };
+
+            if(!member.password || member.password.trim() === ""){
+                alert('공백 또는 입력하지 않았습니다.');
+                return false;
+            }
+
+            const confrimCheck = confirm("수정하시겠습니까?");
+
+            if(confrimCheck == true){
+                $.ajax({
+                    type: 'PUT',
+                    url: 'member/edit',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(member)
+                }).done(function(result){
+                    if(result){
+                        alert('회원 수정이 완료되었습니다.');
+                        window.location.href="/member/mypage";
+                    }
+                }).fail(function(error){
+                    alert(JSON.stringify(error));
+                });
+            }
+        }
+
+    </script>
+</th:block>
+
+</body>
+</html>
+

@@ -9,13 +9,14 @@
 
     <div class="p-3 align-items-center mb-4 ">
 
-        <div class="mb-3 justify-content-between d-flex">
+        <div class="mb-3 justify-content-start">
             <h3 class="ml-3">자유게시판</h3>
-            <a th:href="@{/posts/new}" class=" d-sm-inline-block btn btn-md btn-primary shadow-sm">작성하기</a>
-        </div>
-        <div class="mb-3 justify-content-end d-flex">
-<!--            th:onchange="'window.location.href = \'' + @{/posts} + '?size=\' + this.value +' + '\'&sort=' + __${orderBy}__ + ',desc\''"-->
-            <select class="custom-select w-25 custom-select-sm mr-2" onchange="pageSizeChange(this)">
+            </div>
+        <div class="mb-2 justify-content-between d-flex align-items-center">
+            <h6 class="mb-0 ml-3" th:text="${pagination.getTotalElements()}+'개의 글'"></h6>
+
+            <div>
+            <select class="custom-select custom-select-sm mr-2 " onchange="pageSizeChange(this)">
                 <option value="5" th:selected="${pagination.pageSize == 5}">5</option>
                 <option value="10" th:selected="${pagination.pageSize == 10}">10</option>
                 <option value="20" th:selected="${pagination.pageSize == 20}">20</option>
@@ -25,8 +26,9 @@
                th:href="@{'/posts?page='+${pagination.pageNumber}+'&size='+${pagination.pageSize}+'&sort=viewCnt,desc'}">조회수 순</a>
             <a class="btn btn-primary mr-2"
                th:href="@{'/posts?page='+${pagination.pageNumber}+'&size='+${pagination.pageSize}+'&sort=createdAt,desc'}">최신 순</a>
-
+            </div>
         </div>
+
         <table class="table table-hover text-center">
             <caption></caption>
             <thead>
@@ -40,7 +42,7 @@
             </thead>
             <tbody>
             <tr class="clickable-row" th:each="post, iter : ${postPage}" th:attr="data-url=@{'/posts/' + ${post.id}} ">
-                <td th:text="${post.id}"></td>
+                <td th:text="${pagination.getTotalElements()-(pagination.pageNumber*pagination.pageSize + iter.index)}"></td>
                 <td th:text="${post.title}"></td>
                 <td th:text="${post.member.username}"></td>
                 <td th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd')}"></td>
@@ -48,8 +50,13 @@
             </tr>
             </tbody>
         </table>
+        <div class="justify-content-end d-flex">
+            <a th:href="@{/posts/new}" class=" d-sm-inline-block btn btn-md btn-primary shadow-sm">작성하기</a>
+
+        </div>
         <div th:replace="fragment/pagination :: pagination">
         </div>
+
 
     </div>
     <script th:inline="javascript">

@@ -6,24 +6,16 @@ import kr.co.community.model.Role;
 import kr.co.community.model.enums.Author;
 import kr.co.community.repository.MemberRepository;
 import kr.co.community.repository.RoleRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
-import java.security.Principal;
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -92,5 +84,14 @@ public class MemberService implements UserDetailsService {
     @Transactional
     public boolean checkEmailDuplication(Member member) {
         return memberRepository.existsByEmail(member.getEmail());
+    }
+
+    public boolean checkPassword(Member member, String checkPassword) {
+        String realPassword = member.getPassword();
+        return bCryptPasswordEncoder.matches(checkPassword, realPassword);
+    }
+
+    public Member findById(Long id) {
+        return memberRepository.findById(id).orElse(null);
     }
 }

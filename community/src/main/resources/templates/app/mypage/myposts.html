@@ -30,8 +30,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="clickable-row" th:each="post, iter : ${postPage}" th:attr="data-url=@{'/member/' + ${post.id}} ">
-                <td th:text="${post.id}"></td>
+            <tr class="clickable-row" th:each="post, iter : ${postPage}" th:attr="data-url=@{'/posts/' + ${post.id}} ">
+                <td th:text="${pagination.getTotalElements()-(pagination.pageNumber*pagination.pageSize + iter.index)}"></td>
                 <td th:text="${post.title}"></td>
                 <td th:text="${post.member.username}"></td>
                 <td th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd')}"></td>

@@ -5,14 +5,13 @@
 <body layout:fragment="content" class="bg-gradient-primary">
 <div class="container">
 
-    <!-- Outer Row -->
+
     <div class="row justify-content-center">
 
         <div class="col-xl-10 col-lg-12 col-md-9">
 
             <div class="card o-hidden border-0 shadow-lg my-5">
                 <div class="card-body p-0">
-                    <!-- Nested Row within Card Body -->
 
                     <div class="p-5">
                         <div class="text-center">
@@ -59,6 +58,20 @@
     </div>
 
 </div>
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        window.onload = function(){
+            /*<![CDATA[*/
+            var error = /*[[ ${error} ]]*/;
+
+            if((error)!=null){
+                alert(error);
+            }
+            /*]]*/
+        }
+
+    </script>
+</th:block>
 
 </body>
 </html>

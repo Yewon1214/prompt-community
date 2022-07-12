@@ -11,6 +11,7 @@
         <div class="align-items-center mb-4">
             <h1 class="h3 text-gray-800">글쓰기</h1>
         </div>
+
         <form th:action="@{${postVo.id == null ? '/posts' : '/posts/'+postVo.id+'/edit'}}" th:method="${postVo.id == null ? 'post' : 'put'}" th:object="${postVo}">
 
             <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger">
@@ -36,7 +37,7 @@
 
     <script src="/js/summernote/summernote-lite.min.js"></script>
     <script src="/js/summernote/lang/summernote-ko-KR.js"></script>
-    <script>
+    <script >
         $('#summernote').summernote({
             placeholder: '내용을 입력하세요',
             lang: "ko-KR",

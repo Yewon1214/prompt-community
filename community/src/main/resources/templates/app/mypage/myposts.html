@@ -10,13 +10,13 @@
     <div class="p-3 align-items-center mb-4 ">
 
         <div class="mb-3 justify-content-between d-flex">
-            <h3 class="ml-3">마이페이지</h3>
+            <h3 class="ml-3"><a th:href="@{/member/mypage}" class="text-black text-decoration-none">마이페이지</a></h3>
         </div>
         <div class="mb-3 justify-content-end">
             <a class="btn btn-primary"
-               th:href="@{/posts/mypage/myposts}">내가 쓴 글 보기</a>
+               th:href="@{/member/mypage/myposts}">내가 쓴 글 보기</a>
             <a class="btn btn-primary"
-               th:href="@{/posts/mypage/mycomments}">내가 쓴 댓글 보기</a>
+               th:href="@{/member/mypage/mycomments}">내가 쓴 댓글 보기</a>
         </div>
         <table class="table table-hover text-center">
             <caption></caption>
@@ -30,7 +30,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="clickable-row" th:each="post, iter : ${postPage}" th:attr="data-url=@{'/posts/' + ${post.id}} ">
+            <tr class="clickable-row" th:each="post, iter : ${postPage}" th:attr="data-url=@{'/member/' + ${post.id}} ">
                 <td th:text="${post.id}"></td>
                 <td th:text="${post.title}"></td>
                 <td th:text="${post.member.username}"></td>
@@ -42,7 +42,7 @@
         <div>
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:if="${pagination.pageNumber > 0}">
-                    <a class="page-link" th:href="@{'/posts/mypage/myposts?page=' + ${pagination.pageNumber -1}}" aria-label="Previous">
+                    <a class="page-link" th:href="@{'/member/mypage/myposts?page=' + ${pagination.pageNumber -1}}" aria-label="Previous">
                         <span aria-hidden="true">이전</span>
                     </a>
                 </li>
@@ -50,18 +50,18 @@
                           th:each="i : ${#numbers.sequence(0, pagination.totalPages - 1)}">
                     <li th:if="${i >= 0 && i < pagination.totalPages}" class="page-item"
                         th:classappend="${pagination.pageNumber == i ? 'active' : ''}">
-                        <a th:href="@{/posts/mypage/myposts/(page=${i})}" th:text="${i+1}" class="page-link"></a>
+                        <a th:href="@{/member/mypage/myposts/(page=${i})}" th:text="${i+1}" class="page-link"></a>
                     </li>
                 </th:block>
                 <th:block th:unless="${pagination.totalPages < 5}"
                           th:each="i : ${#numbers.sequence(pagination.pageNumber -2 , pagination.pageNumber+2)}">
                     <li th:if="${i >= 0 && i < pagination.totalPages}" class="page-item"
                         th:classappend="${pagination.pageNumber == i ? 'active' : ''}">
-                        <a th:href="@{/posts/mypage/myposts/(page=${i})}" th:text="${i+1}" class="page-link"></a>
+                        <a th:href="@{/member/mypage/myposts/(page=${i})}" th:text="${i+1}" class="page-link"></a>
                     </li>
                 </th:block>
                 <li class="page-item" th:if="${pagination.pageNumber < pagination.totalPages - 1}">
-                    <a class="page-link" th:href="@{'/posts/mypage/myposts?page=' + ${pagination.pageNumber + 1}}" aria-label="Next">
+                    <a class="page-link" th:href="@{'/member/mypage/myposts?page=' + ${pagination.pageNumber + 1}}" aria-label="Next">
                         <span aria-hidden="true">다음</span>
                     </a>
                 </li>

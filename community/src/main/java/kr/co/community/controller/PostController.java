@@ -89,45 +89,6 @@ public class PostController {
         return "app/posts/show";
     }
 
-    @GetMapping("/mypage")
-    public String showMyPage(Model model, Principal principal){
-        Member member = memberService.findByEmail(principal.getName());
-
-        model.addAttribute("member", member);
-        return "app/mypage/index";
-    }
-
-    @GetMapping("/mypage/myposts")
-    public String showMyPost(Model model, Principal principal, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
-        Member member = memberService.findByEmail(principal.getName());
-
-        Page<Post> postPage = postService.findByMember(member, pageable);
-        Pagination pagination = new Pagination(pageable);
-        pagination.setTotalElements(postPage.getTotalElements());
-        pagination.setTotalPages(postPage.getTotalPages());
-
-        model.addAttribute("postPage", postPage.getContent());
-        model.addAttribute("pagination", pagination);
-
-        return "app/mypage/myposts";
-    }
-
-    @GetMapping("/mypage/mycomments")
-    public String showMyComments(Model model, Principal principal, @PageableDefault(sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
-        Member member = memberService.findByEmail(principal.getName());
-
-        Page<Comment> commentPage = commentService.findByMember(member, pageable);
-        Pagination pagination = new Pagination(pageable);
-        pagination.setTotalPages(commentPage.getTotalPages());
-        pagination.setTotalElements(commentPage.getTotalElements());
-
-        model.addAttribute("commentPage", commentPage);
-        model.addAttribute("pagination", pagination);
-
-        return "app/mypage/mycomments";
-    }
-
-
     @GetMapping("/{id}/edit")
     public String update(Principal principal, @PathVariable("id")Long id, Model model) throws Exception {
         Post post = postService.findById(id);

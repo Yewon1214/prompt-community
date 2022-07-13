@@ -17,7 +17,7 @@
                         <div class="text-center">
                             <h1 class="h4 text-gray-900 mb-4">회원정보수정</h1>
                         </div>
-                        <form th:action="@{/member/edit}" th:object="${memberVo}" th:method="put" class="user">
+                        <form th:object="${memberVo}" th:method="put" class="user">
                             <input type="hidden" th:id="userId" th:value="*{id}">
                             <div class="form-group">
                                 <label style="font-weight: bold" th:for="username">이름</label>
@@ -35,9 +35,9 @@
                                 <input type="password" th:id="password" th:name="password"
                                        placeholder="변경할 비밀번호를 입력하세요." class="form-control form-control-user" >
                             </div>
-                            <button id="memberUpdate" class="btn btn-primary btn-user btn-block" value="회원 정보 수정"
-                                    th:onclick="memberUpdate()">회원 정보 수정</button>
                         </form>
+                        <button id="memberUpdate" class="btn btn-primary btn-user form-control form-control-user" value="회원 정보 수정"
+                                th:onclick="memberUpdate()">회원 정보 수정</button>
 
                     </div>
                 </div>
@@ -50,7 +50,11 @@
 </div>
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+
         function memberUpdate(){
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+
             const member = {
                 id: $('#userId').val(),
                 username: $('#username').val(),
@@ -63,16 +67,17 @@
                 return false;
             }
 
-            const confrimCheck = confirm("수정하시겠습니까?");
+            const confirmCheck = confirm("수정하시겠습니까?");
 
-            if(confrimCheck == true){
+            if(confirmCheck === true){
                 $.ajax({
                     type: 'PUT',
                     url: '/member',
+                    headers: {'X-CSRF-TOKEN': token},
                     contentType: 'application/json; charset=utf-8',
                     data: JSON.stringify(member)
                 }).done(function(result){
-                    if(result){
+                    if(result ===true || result==="true"){
                         alert('회원 수정이 완료되었습니다.');
                         window.location.href="/member/mypage";
                     }

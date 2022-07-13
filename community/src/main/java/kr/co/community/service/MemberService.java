@@ -7,6 +7,7 @@ import kr.co.community.model.enums.Author;
 import kr.co.community.repository.MemberRepository;
 import kr.co.community.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,6 +18,7 @@ import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.util.Objects;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
@@ -93,5 +95,10 @@ public class MemberService implements UserDetailsService {
 
     public Member findById(Long id) {
         return memberRepository.findById(id).orElse(null);
+    }
+
+    public void passwordUpdate(String password, Member member) {
+        member.update(bCryptPasswordEncoder.encode(password));
+        memberRepository.save(member);
     }
 }

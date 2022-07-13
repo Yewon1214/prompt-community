@@ -1,5 +1,6 @@
 package kr.co.community.controller;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import kr.co.community.model.Comment;
 import kr.co.community.model.Pagination;
 import kr.co.community.model.Post;
@@ -117,25 +118,21 @@ public class MemberController {
             throw new Exception("접근 권한이 없습니다.");
         }
 
-        if(Objects.isNull(currentMember)){
-            throw new Exception("없는 멤버입니다.");
-        }
-
         model.addAttribute("memberVo", currentMember);
         return "app/members/edit";
     }
 
     @PutMapping("")
-    public String update(Member member, @CurrentUser Member currentMember) throws Exception {
+    @ResponseBody
+    public boolean update(@RequestBody Member member, @CurrentUser Member currentMember) {
 
-        if(currentMember.getId() == member.getId()){
-            throw new Exception("같은 유저가 아닙니다.");
+        if(currentMember.getId() != member.getId()){
+            return false;
         }
 
-        currentMember.update(member.getPassword());
-        memberService.saveMember(currentMember);
+       memberService.passwordUpdate(member.getPassword(), currentMember);
 
-        return "app/mypage/index";
+        return true;
     }
 
     @GetMapping("/checkpwdview")

@@ -5,38 +5,38 @@
 
 
     <ul class="pagination justify-content-center">
-        <li class="page-item">
-            <a class="page-link" th:href="@{'/posts?page=0&size=' + ${pagination.pageSize} + '&sort=' + ${orderBy}}" aria-label="Previous">
-                <span aria-hidden="true"><i class="fa fa-angle-double-left" aria-hidden="true"></i> </span>
+        <li class="page-item" th:if="${pagination.pageNumber > 0}">
+            <a class="page-link" th:href="@{${#httpServletRequest.requestURI}+'?page=0' + '&sort=' + ${orderBy}}" aria-label="Previous">
+                <span aria-hidden="true"><<</span>
             </a>
         </li>
         <li class="page-item" th:if="${pagination.pageNumber > 0}">
-            <a class="page-link" th:href="@{'/posts?page=' + ${pagination.pageNumber -1} + '&size=' + ${pagination.pageSize} + '&sort=' + ${orderBy} + ',desc'}" aria-label="Previous">
-                <span aria-hidden="true">이전</span>
+            <a class="page-link" th:href="@{${#httpServletRequest.requestURI}+'?page='+${pagination.pageNumber -1} + '&size=' + ${pagination.pageSize} + '&sort=' + ${orderBy} + ',desc'}" aria-label="Previous">
+                <span aria-hidden="true"><</span>
             </a>
         </li>
         <th:block th:if="${pagination.totalPages < 5}"
                   th:each="i : ${#numbers.sequence(0, pagination.totalPages - 1)}">
             <li th:if="${i >= 0 && i < pagination.totalPages}" class="page-item"
                 th:classappend="${pagination.pageNumber == i ? 'active' : ''}">
-                <a th:href="@{'/posts?page=' + ${i} + '&size=' + ${pagination.pageSize} + '&sort=' + ${orderBy} + ',desc'}" th:text="${i+1}" class="page-link"></a>
+                <a th:href="@{${#httpServletRequest.requestURI}+'?page='+${i} + '&size=' + ${pagination.pageSize} + '&sort=' + ${orderBy} + ',desc'}" th:text="${i+1}" class="page-link"></a>
             </li>
         </th:block>
         <th:block th:unless="${pagination.totalPages < 5}"
                   th:each="i : ${#numbers.sequence(pagination.pageNumber -2 , pagination.pageNumber+2)}">
             <li th:if="${i >= 0 && i < pagination.totalPages}" class="page-item"
                 th:classappend="${pagination.pageNumber == i ? 'active' : ''}">
-                <a th:href="@{'/posts?page=' + ${i} + '&size=' + ${pagination.pageSize} + '&sort=' + ${orderBy} + ',desc'}" th:text="${i+1}" class="page-link"></a>
+                <a th:href="@{${#httpServletRequest.requestURI}+'?page='+${i} + '&size=' + ${pagination.pageSize} + '&sort=' + ${orderBy} + ',desc'}" th:text="${i+1}" class="page-link"></a>
             </li>
         </th:block>
         <li class="page-item" th:if="${pagination.pageNumber < pagination.totalPages - 1}">
-            <a class="page-link" th:href="@{'/posts?page=' + ${pagination.pageNumber + 1} + '&size=' + ${pagination.pageSize}+ '&sort=' + ${orderBy}+ ',desc'}" aria-label="Next">
-                <span aria-hidden="true">다음</span>
+            <a class="page-link" th:href="@{${#httpServletRequest.requestURI}+'?page='+${pagination.pageNumber + 1} + '&size=' + ${pagination.pageSize}+ '&sort=' + ${orderBy}+ ',desc'}" aria-label="Next">
+                <span aria-hidden="true">></span>
             </a>
         </li>
-        <li class="page-item">
-            <a class="page-link" th:href="@{'/posts?page='+ ${pagination.totalPages - 1} +'&size=' + ${pagination.pageSize} + '&sort=' + ${orderBy}+ ',desc'}" aria-label="Previous">
-                <span aria-hidden="true"><i class="fa fa-angle-double-right" aria-hidden="true"></i> </span>
+        <li class="page-item" th:if="${pagination.pageNumber < pagination.totalPages - 1}">
+            <a class="page-link" th:href="@{${#httpServletRequest.requestURI}+'?page='+${pagination.totalPages - 1} +'&size=' + ${pagination.pageSize} + '&sort=' + ${orderBy}+ ',desc'}" aria-label="Previous">
+                <span aria-hidden="true">>></span>
             </a>
         </li>
     </ul>

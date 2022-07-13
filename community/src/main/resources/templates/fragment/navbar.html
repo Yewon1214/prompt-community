@@ -30,7 +30,7 @@
         </ul>
 
         <div class="ml-auto d-flex align-items-center">
-            <div class="m-2">
+            <div class="m-2" style="color: #d1d3e2">
                 <th:block sec:authorize="isAuthenticated()"
                           th:with="currentUser=${#authentication.getPrincipal().getMember()}">
                     <span th:text="${currentUser.username}"></span>님 환영합니다.

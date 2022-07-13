@@ -10,7 +10,7 @@
     <div class="p-3 align-items-center mb-4 ">
 
         <div class="mb-3 justify-content-between d-flex">
-            <h3 class="ml-3"><a th:href="@{/member/mypage}" class="text-black text-decoration-none">마이페이지</a></h3>
+            <h3><a th:href="@{/member/mypage}" class="text-black text-decoration-none">마이페이지</a></h3>
         </div>
         <div class="mb-3 justify-content-end">
             <a class="btn btn-primary"
@@ -35,33 +35,7 @@
             </tr>
             </tbody>
         </table>
-        <div>
-            <ul class="pagination justify-content-center">
-                <li class="page-item pointer" th:if="${pagination.pageNumber > 0}">
-                    <a class="page-link" th:href="@{'/member/mypage/mycomment?page=' + ${pagination.pageNumber -1}}" aria-label="Previous">
-                        <span aria-hidden="true">이전</span>
-                    </a>
-                </li>
-                <th:block th:if="${pagination.totalPages < 5}"
-                          th:each="i : ${#numbers.sequence(0, pagination.totalPages - 1)}">
-                    <li th:if="${i >= 0 && i < pagination.totalPages}" class="page-item"
-                        th:classappend="${pagination.pageNumber == i ? 'active' : ''}">
-                        <a th:href="@{/member/mypage/mycomment/(page=${i})}" th:text="${i+1}" class="page-link"></a>
-                    </li>
-                </th:block>
-                <th:block th:unless="${pagination.totalPages < 5}"
-                          th:each="i : ${#numbers.sequence(pagination.pageNumber -2 , pagination.pageNumber+2)}">
-                    <li th:if="${i >= 0 && i < pagination.totalPages}" class="page-item"
-                        th:classappend="${pagination.pageNumber == i ? 'active' : ''}">
-                        <a th:href="@{/member/mypage/mycomment/(page=${i})}" th:text="${i+1}" class="page-link"></a>
-                    </li>
-                </th:block>
-                <li class="page-item" th:if="${pagination.pageNumber < pagination.totalPages - 1}">
-                    <a class="page-link" th:href="@{'/member/mypage/mycomment?page=' + ${pagination.pageNumber + 1}}" aria-label="Next">
-                        <span aria-hidden="true">다음</span>
-                    </a>
-                </li>
-            </ul>
+        <div th:replace="fragment/pagination :: pagination">
         </div>
 
     </div>

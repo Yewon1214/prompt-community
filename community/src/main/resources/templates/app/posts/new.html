@@ -2,9 +2,9 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/basic}" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
-<body class="container-fluid">
+<body>
 
-<div layout:fragment="content" class="row justify-content-center">
+<div layout:fragment="content" class="container-fluid row justify-content-center">
 
     <div class="p-5 container">
 
@@ -12,8 +12,9 @@
             <h1 class="h3 text-gray-800">글쓰기</h1>
         </div>
 
-        <form th:action="@{${postVo.id == null ? '/posts' : '/posts/'+postVo.id+'/edit'}}" th:method="${postVo.id == null ? 'post' : 'put'}" th:object="${postVo}">
+        <form th:action="@{'/posts'}" th:method="${postVo.id == null ? 'post' : 'put'}" th:object="${postVo}">
 
+            <input type="hidden" th:field="*{id}">
             <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger">
                 <div th:each="err : ${#fields.allErrors()}" th:text="${err}">Test</div>
             </div>

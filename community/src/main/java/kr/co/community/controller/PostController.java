@@ -79,9 +79,7 @@ public class PostController {
         }
         List<Comment> comments = post.getComments();
 
-        if(comments !=null && !comments.isEmpty()){
-            model.addAttribute("comments", comments);
-        }
+        model.addAttribute("comments", comments);
 
         postService.updateView(id);
         model.addAttribute("post", post);
@@ -103,18 +101,22 @@ public class PostController {
         return "app/posts/new";
     }
 
-    @PutMapping("/{id}/edit")
-    public String update(@PathVariable("id") Long id, @Valid @ModelAttribute PostVo postVo, BindingResult bindingResult) {
-
+    @PutMapping("")
+    public String update(Long id, Principal principal, @Valid @ModelAttribute PostVo postVo, BindingResult bindingResult) throws Exception {
         if(bindingResult.hasErrors()){
             return "app/posts/new";
         }
 
         Post postForUpdate = postService.findById(id);
 
+        Member member = memberService.findByEmail(principal.getName());
+        if(!postForUpdate.isWriter(member)){
+            throw new Exception("수정 권한이 없습니다");
+        }
+
         postForUpdate.update(postVo);
         postService.savePost(postForUpdate);
-        return "redirect:/posts/"+id;
+        return "redirect:/posts/"+ id;
     }
 
     @DeleteMapping("/{id}")

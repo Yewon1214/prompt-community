@@ -87,7 +87,9 @@ public class MemberController {
         pagination.setTotalElements(postPage.getTotalElements());
         pagination.setTotalPages(postPage.getTotalPages());
 
+        String[] orderBy = String.valueOf(pageable.getSort()).split(":");
         model.addAttribute("postPage", postPage.getContent());
+        model.addAttribute("orderBy", orderBy[0]);
         model.addAttribute("pagination", pagination);
 
         return "app/mypage/myposts";
@@ -112,7 +114,10 @@ public class MemberController {
     }
 
     @GetMapping("/edit/{id}")
-    public String update(@PathVariable("id") Long id, Model model) throws Exception {
+    public String update(@PathVariable("id") Long id, Model model, Principal principal) throws Exception {
+        if (principal == null) {
+            throw new Exception("접근 권한이 없습니다.");
+        }
         Member member = memberService.findById(id);
         if(Objects.isNull(member)){
             throw new Exception("없는 멤버입니다.");
@@ -121,7 +126,7 @@ public class MemberController {
         return "app/members/edit";
     }
 
-    @PutMapping("/edit")
+    @PutMapping("")
     public String update(Member member, Principal principal) throws Exception {
         Member currentMember = memberService.findByEmail(principal.getName());
 

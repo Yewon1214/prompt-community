@@ -2,11 +2,11 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/basic}" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
-<body class="container-fluid">
+<body>
 
-<div layout:fragment="content" class="container">
+<div layout:fragment="content" class="container-fluid">
 
-    <div class="p-3 align-items-center mb-4">
+    <div class="container p-3 align-items-center mb-4">
 
         <div sec:authorize="isAuthenticated()">
             <div th:if="${#strings.equals(post.member.username, #authentication.getPrincipal().getMember().getUsername())}"
@@ -16,17 +16,17 @@
                     <input type="submit" class="d-md-inline-block btn btn-md btn-danger" value="삭제">
                 </form>
                 <div class="d-inline">
-                    <a th:href="@{'/posts/' + ${post.getId()} + '/edit'}"
+                    <a th:href="@{'/posts/' + ${post.id} + '/edit'}"
                        class="d-md-inline-block btn btn-md btn-success shadow-md d-inline">수정</a>
                 </div>
             </div>
         </div>
-        <table id="post" class="table table-bordered text-center">
+        <table id="post" class="table table-bordered ">
 
             <tbody>
             <tr>
                 <th>제목</th>
-                <td th:text="${post.getTitle()}"></td>
+                <td th:text="${post.getTitle()} "></td>
             </tr>
             <tr>
                 <th>작성자</th>
@@ -41,7 +41,7 @@
                 <td th:text="${post.getViewCnt()}"></td>
             </tr>
             <tr>
-                <td id="content" colspan="2" th:utext="${post.getContent()}" class=" card-body"></td>
+                <td id="content" colspan="2" th:utext="${post.getContent()}" class="card-body"></td>
             </tr>
 
             </tbody>
@@ -52,8 +52,8 @@
             <div class="card-header"><h6>댓글</h6></div>
             <th:block th:if="${post.comments != null}" th:each="comment : ${comments}">
 
-                <ul class="list-group-flush">
-                    <li class="list-group-item ">
+                <ul class="list-group-flush card-body">
+                    <li class="list-group-item p-0">
                         <span class="d-flex justify-content-between ">
                             <span>
                             <span id="username" th:text="${comment.member.username}"></span>
@@ -76,7 +76,8 @@
                         </span>
                         <div class="collapse show" th:id="'collapseComment'+${comment.id}" th:text="${comment.content}"></div>
                         <div class="collapse mt-2" th:id="'collapseComment'+${comment.id}">
-                            <form th:object="${commentVo}" th:action="@{'/comments/' + ${comment.id} + '/edit'}" th:method="put" class="pr-2">
+                            <form th:object="${commentVo}" th:action="@{/comments}" th:method="put" >
+                                <input type="hidden" name="id" th:value="${comment.id}" >
                                 <textarea th:name="content" class="form-control" maxlength="500" id="commentContent2" th:text="${comment.content}" required></textarea>
                                 <span id="counter2" style="color:#aaa;" th:value="'('+${comment.content.length()}+' / 500)'"></span>
                                 <div class="justify-content-end d-flex">

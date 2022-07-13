@@ -1,4 +1,4 @@
-# prompt-community
+# promptech-community
 spring boot 게시판 프로젝트
 
 <br>

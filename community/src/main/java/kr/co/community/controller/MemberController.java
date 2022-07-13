@@ -3,6 +3,7 @@ package kr.co.community.controller;
 import kr.co.community.model.Comment;
 import kr.co.community.model.Pagination;
 import kr.co.community.model.Post;
+import kr.co.community.model.helper.CurrentUser;
 import kr.co.community.service.CommentService;
 import kr.co.community.service.PostService;
 import kr.co.community.vo.MemberVo;
@@ -65,24 +66,22 @@ public class MemberController {
     }
 
     @GetMapping("/mypage")
-    public String showMyPage(Model model, Principal principal) throws Exception {
-        if (principal == null) {
+    public String showMyPage(Model model, @CurrentUser Member currentMember) throws Exception {
+        if (currentMember == null) {
             throw new Exception("접근 권한이 없습니다.");
         }
-        Member member = memberService.findByEmail(principal.getName());
 
-        model.addAttribute("member", member);
+        model.addAttribute("member", currentMember);
         return "app/mypage/index";
     }
 
     @GetMapping("/mypage/myposts")
-    public String showMyPost(Model model, Principal principal, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) throws Exception {
-        if (principal == null) {
+    public String showMyPost(Model model, @CurrentUser Member currentMember, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) throws Exception {
+        if (currentMember == null) {
             throw new Exception("접근 권한이 없습니다.");
         }
-        Member member = memberService.findByEmail(principal.getName());
 
-        Page<Post> postPage = postService.findByMember(member, pageable);
+        Page<Post> postPage = postService.findByMember(currentMember, pageable);
         Pagination pagination = new Pagination(pageable);
         pagination.setTotalElements(postPage.getTotalElements());
         pagination.setTotalPages(postPage.getTotalPages());
@@ -96,13 +95,12 @@ public class MemberController {
     }
 
     @GetMapping("/mypage/mycomments")
-    public String showMyComments(Model model, Principal principal, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) throws Exception {
-        if (principal == null) {
+    public String showMyComments(Model model, @CurrentUser Member currentMember, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) throws Exception {
+        if (currentMember == null) {
             throw new Exception("접근 권한이 없습니다.");
         }
-        Member member = memberService.findByEmail(principal.getName());
 
-        Page<Comment> commentPage = commentService.findByMember(member, pageable);
+        Page<Comment> commentPage = commentService.findByMember(currentMember, pageable);
         Pagination pagination = new Pagination(pageable);
         pagination.setTotalPages(commentPage.getTotalPages());
         pagination.setTotalElements(commentPage.getTotalElements());
@@ -114,21 +112,21 @@ public class MemberController {
     }
 
     @GetMapping("/edit/{id}")
-    public String update(@PathVariable("id") Long id, Model model, Principal principal) throws Exception {
-        if (principal == null) {
+    public String update(@PathVariable("id") Long id, Model model, @CurrentUser Member currentMember) throws Exception {
+        if (currentMember == null) {
             throw new Exception("접근 권한이 없습니다.");
         }
-        Member member = memberService.findById(id);
-        if(Objects.isNull(member)){
+
+        if(Objects.isNull(currentMember)){
             throw new Exception("없는 멤버입니다.");
         }
-        model.addAttribute("memberVo", member);
+
+        model.addAttribute("memberVo", currentMember);
         return "app/members/edit";
     }
 
     @PutMapping("")
-    public String update(Member member, Principal principal) throws Exception {
-        Member currentMember = memberService.findByEmail(principal.getName());
+    public String update(Member member, @CurrentUser Member currentMember) throws Exception {
 
         if(currentMember.getId() == member.getId()){
             throw new Exception("같은 유저가 아닙니다.");
@@ -141,24 +139,23 @@ public class MemberController {
     }
 
     @GetMapping("/checkpwdview")
-    public String checkPwdView(Principal principal, Model model) throws Exception {
-        if (principal == null) {
+    public String checkPwdView(@CurrentUser Member currentMember, Model model) throws Exception {
+        if (currentMember == null) {
             throw new Exception("잘못된 접근입니다.");
         }
-        Member member = memberService.findByEmail(principal.getName());
-        model.addAttribute("id", member.getId());
+
+        model.addAttribute("id", currentMember.getId());
         return "app/members/checkpwd";
     }
 
     @GetMapping("/checkpwd")
     @ResponseBody
-    public boolean checkPwd(@RequestParam String checkPassword, Principal principal, Model model) throws Exception {
-        if (principal == null) {
+    public boolean checkPwd(@RequestParam String checkPassword, @CurrentUser Member currentMember) throws Exception {
+        if (currentMember == null) {
             throw new Exception("잘못된 접근입니다.");
         }
-        Member member = memberService.findByEmail(principal.getName());
 
-        return memberService.checkPassword(member, checkPassword);
+        return memberService.checkPassword(currentMember, checkPassword);
     }
 
 }

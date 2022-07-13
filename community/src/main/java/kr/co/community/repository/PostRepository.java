@@ -23,4 +23,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     int updateView(Long id);
 
     Page<Post> findPostsByMember(Member member, Pageable pageable);
+
+    @Query(value="SELECT p FROM Post p " +
+            "LEFT JOIN FETCH p.comments " +
+            "WHERE p.id = :id")
+    Post findByJoin(Long id);
 }

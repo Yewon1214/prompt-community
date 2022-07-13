@@ -32,7 +32,9 @@ public class PostService  {
     public Page<Post> findAll(Pageable pageable){
         return postRepository.findAll(pageable);
     }
-
+    public Post findAll(Long id) {
+        return postRepository.findByJoin(id);
+    }
     public Page<Post> findByMember(Member member, Pageable pageable) {
         return postRepository.findPostsByMember(member, pageable);
     }
@@ -46,5 +48,6 @@ public class PostService  {
     public void deleteById(Long id){
         postRepository.deleteById(id);
     }
+
 
 }

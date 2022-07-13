@@ -50,7 +50,7 @@
 
         <div id="comment" class="mb-3 card">
             <div class="card-header"><h6>댓글</h6></div>
-            <th:block th:if="${post.comments != null}" th:each="comment : ${comments}">
+            <th:block th:if="${post.comments != null}" th:each="comment : ${post.comments}">
 
                 <ul class="list-group-flush card-body">
                     <li class="list-group-item p-0">

@@ -28,4 +28,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "LEFT JOIN FETCH p.comments " +
             "WHERE p.id = :id")
     Post findByJoin(Long id);
+
+     void deleteAllByMemberId(Long id);
+
 }

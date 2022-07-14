@@ -28,12 +28,62 @@
                     <h5 th:text="'username: '+${member.username}"></h5>
                     <h5 th:text="'email: '+${member.email}"></h5>
                     <a class="btn btn-primary" type="submit" th:href="@{/member/checkpwdview}">내 정보 수정</a>
-                </div>
 
+
+                </div>
+                <button class="btn btn-danger" onclick="deleteMember()">회원 탈퇴</button>
 
             </div>
         </div>
-    </div>
+        </div>
 </div>
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        var token = $("meta[name='_csrf']").attr("content");
+        function logout(){
+            console.log('logout');
+            $.ajax({
+                type: 'POST',
+                url: '/member/logout',
+                headers: {'X-CSRF-TOKEN': token},
+                success: function () {
+                    alert('로그아웃 되었습니다.');
+                    window.location.href="/";
+                },
+                err: function (error) {
+                    alert(JSON.stringify(error));
+                }
+            });
+        }
+
+        function deleteMember(){
+            /*<![CDATA[*/
+            var id = /*[[ ${member.id} ]]*/;
+            /*]]*/
+
+            const confirmCheck = confirm("정말로 삭제하시겠습니까?");
+
+            if(confirmCheck === true){
+                $.ajax({
+                    type: 'DELETE',
+                    url: '/member/'+id,
+                    headers: {'X-CSRF-TOKEN': token}
+                }).done(function(result){
+                    console.log(result);
+                    console.log(typeof result);
+                    if(result === true){
+                        alert('회원 탈퇴가 완료되었습니다.');
+                        logout();
+                    }else{
+                        alert('탈퇴가 실패했습니다.');
+                        window.location.href="/";
+                    }
+                }).fail(function(error){
+                    alert(JSON.stringify(error));
+                });
+            }
+        }
+    </script>
+</th:block>
 </body>
 </html>

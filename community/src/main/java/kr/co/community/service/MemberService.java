@@ -54,6 +54,17 @@ public class MemberService implements UserDetailsService {
         }
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Member member = memberRepository.findByEmail(username);
+
+        if(Objects.isNull(member)){
+
+            throw new UsernameNotFoundException("Member not found");
+        }
+        return new MemberAdapter(member);
+    }
+
     @Transactional
     public void saveMember(Member vo){
         Member member = Member.builder()
@@ -72,17 +83,6 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findByEmail(email);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = memberRepository.findByEmail(username);
-
-        if(Objects.isNull(member)){
-
-            throw new UsernameNotFoundException("Member not found");
-        }
-        return new MemberAdapter(member);
-    }
-
     @Transactional
     public boolean checkEmailDuplication(Member member) {
         return memberRepository.existsByEmail(member.getEmail());
@@ -97,8 +97,14 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public void passwordUpdate(String password, Member member) {
         member.update(bCryptPasswordEncoder.encode(password));
         memberRepository.save(member);
+    }
+
+    @Transactional
+    public void deleteById(Long id){
+        memberRepository.deleteById(id);
     }
 }

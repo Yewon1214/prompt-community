@@ -4,6 +4,7 @@ import kr.co.community.model.Member;
 import kr.co.community.model.Post;
 import kr.co.community.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostService  {
@@ -30,6 +32,7 @@ public class PostService  {
     }
 
     public Page<Post> findAll(Pageable pageable){
+
         return postRepository.findAll(pageable);
     }
     public Post findAll(Long id) {
@@ -50,4 +53,8 @@ public class PostService  {
     }
 
 
+    @Transactional
+    public void deleteByMember(Long id) {
+        postRepository.deleteAllByMemberId(id);
+    }
 }

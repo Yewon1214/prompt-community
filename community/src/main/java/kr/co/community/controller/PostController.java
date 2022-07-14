@@ -76,9 +76,8 @@ public class PostController {
         if(Objects.isNull(post)){
             throw new Exception("게시글이 없습니다.");
         }
-        log.error(String.valueOf(post.getComments().size()));
 
-        if(!post.isWriter(currentMember)){
+        if(currentMember == null || !post.isWriter(currentMember)){
             postService.updateView(id);
         }
 
@@ -94,7 +93,7 @@ public class PostController {
             throw new Exception("게시글이 없습니다.");
         }
 
-        if(!post.isWriter(currentMember)){
+        if(currentMember == null || !post.isWriter(currentMember)){
             throw new Exception("수정 권한이 없습니다");
         }
         model.addAttribute("postVo", post);

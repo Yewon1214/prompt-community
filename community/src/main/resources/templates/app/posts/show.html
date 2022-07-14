@@ -114,7 +114,11 @@
 
         </div>
 
-        <a th:href="@{/posts}" class="d-none d-sm-inline-block btn btn-mg btn-primary shadow-sm">목록으로</a>
+        <div class="d-flex justify-content-between">
+            <a th:href="@{/posts}" class="d-none d-sm-inline-block btn btn-mg btn-primary shadow-sm">목록으로</a>
+
+            <a sec:authorize="isAuthenticated()" th:href="@{/posts/new}" class="d-none d-sm-inline-block btn btn-mg btn-primary shadow-sm">작성하기</a>
+        </div>
 
     </div>
     <th:block layout:fragment="script">

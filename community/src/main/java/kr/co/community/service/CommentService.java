@@ -34,4 +34,9 @@ public class CommentService {
     public Page<Comment> findByMember(Member member, Pageable pageable) {
         return commentRepository.findCommentsByMember(member, pageable);
     }
+
+    @Transactional
+    public void deleteByMember(Long id) {
+        commentRepository.deleteAllByMemberId(id);
+    }
 }

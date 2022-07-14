@@ -23,7 +23,7 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(fetch=FetchType.EAGER, mappedBy = "member")
+    @OneToMany(fetch=FetchType.EAGER, mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Role> roles = new HashSet<>();
 
     @Builder

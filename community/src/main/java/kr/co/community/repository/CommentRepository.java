@@ -13,4 +13,8 @@ import java.util.Optional;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     Page<Comment> findCommentsByMember(Member member, Pageable pageable);
+
+    void deleteCommentsByMember(Member member);
+
+    void deleteAllByMemberId(Long id);
 }

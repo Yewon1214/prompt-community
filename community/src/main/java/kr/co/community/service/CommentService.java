@@ -39,4 +39,8 @@ public class CommentService {
     public void deleteByMember(Long id) {
         commentRepository.deleteAllByMemberId(id);
     }
+
+    public int countByMemberId(Long id){
+        return commentRepository.countByMemberId(id);
+    }
 }

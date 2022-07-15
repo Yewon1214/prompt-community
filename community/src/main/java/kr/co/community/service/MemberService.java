@@ -107,4 +107,5 @@ public class MemberService implements UserDetailsService {
     public void deleteById(Long id){
         memberRepository.deleteById(id);
     }
+
 }

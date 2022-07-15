@@ -4,15 +4,15 @@
 <head></head>
 <body>
 
-<div layout:fragment="content" class="container-fluid">
+<div layout:fragment="content" class="container">
 
 
-    <div class="p-3 align-items-center mb-4 ">
+    <div class=" p-3 mb-4 ">
 
         <div class="mb-3 justify-content-start">
             <h3>자유게시판</h3>
         </div>
-        <div class="mb-2 justify-content-between d-flex align-items-center">
+        <div class="mb-3 justify-content-between d-flex align-items-center">
             <h6 class="mb-0" th:text="'총 '+${pagination.getTotalElements()}+'개의 글'"></h6>
 
             <div class="d-inline-flex">
@@ -30,7 +30,6 @@
         </div>
 
         <table class="table table-hover text-center">
-            <caption></caption>
             <thead>
             <tr>
                 <th style="width: 70px">번호</th>
@@ -42,7 +41,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="clickable-row" th:each="post, iter : ${postPage}" th:attr="data-url=@{'/posts/' + ${post.id}} ">
+            <tr class="clickable-row" th:each="post, iter : ${postPage}" th:attr="data-url=@{'/posts/' + ${post.id} +'?currentPage=' + ${pagination.pageNumber}}">
                 <td th:text="${pagination.getTotalElements()-(pagination.pageNumber*pagination.pageSize + iter.index)}"></td>
                 <td th:text="${post.title}" class="text-left"></td>
                 <td th:text="${post.member.username}"></td>
@@ -52,9 +51,8 @@
             </tr>
             </tbody>
         </table>
-        <div class="justify-content-end d-flex">
+        <div class="justify-content-end d-flex mb-3">
             <a th:href="@{/posts/new}" class=" d-sm-inline-block btn btn-md btn-primary shadow-sm">작성하기</a>
-
         </div>
         <div th:replace="fragment/pagination :: pagination">
         </div>

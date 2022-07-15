@@ -40,6 +40,7 @@ public class Post {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_id")
     private Member member;

@@ -6,7 +6,7 @@
 
     <ul class="pagination justify-content-center">
         <li class="page-item" th:if="${pagination.pageNumber > 0}">
-            <a class="page-link" th:href="@{${#httpServletRequest.requestURI}+'?page=0' + '&sort=' + ${orderBy}}" aria-label="Previous">
+            <a class="page-link" th:href="@{${#httpServletRequest.requestURI}+'?page=0' + '&sort=' + ${orderBy} + ',desc'}" aria-label="Previous">
                 <span aria-hidden="true"><<</span>
             </a>
         </li>

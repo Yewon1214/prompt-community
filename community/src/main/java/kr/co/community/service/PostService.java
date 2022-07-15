@@ -12,6 +12,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -57,4 +60,25 @@ public class PostService  {
     public void deleteByMember(Long id) {
         postRepository.deleteAllByMemberId(id);
     }
+
+    public int countByMemberId(Long id){
+        return postRepository.countByMemberId(id);
+    }
+
+    public Map<String, Post> findPreviousPostById(Post post) {
+        List<Post> posts = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+        Map<String, Post> resultMap = new HashMap<>();
+        int index = posts.indexOf(post);
+
+        if(index > 0){
+            resultMap.put("previous", posts.get(index-1));
+        }
+
+        if(index<posts.size()-1){
+            resultMap.put("next", posts.get(index+1));
+        }
+
+        return resultMap;
+    }
+
 }

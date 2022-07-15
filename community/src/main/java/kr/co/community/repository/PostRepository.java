@@ -31,4 +31,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
      void deleteAllByMemberId(Long id);
 
+
+     @Query(value = "SELECT COUNT(p.id) FROM Post p " +
+             "WHERE p.member.id = :id")
+    int countByMemberId(Long id);
 }

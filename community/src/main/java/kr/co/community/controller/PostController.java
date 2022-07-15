@@ -1,12 +1,9 @@
 package kr.co.community.controller;
 
-import kr.co.community.model.Comment;
 import kr.co.community.model.Member;
 import kr.co.community.model.Pagination;
 import kr.co.community.model.Post;
 import kr.co.community.model.helper.CurrentUser;
-import kr.co.community.service.CommentService;
-import kr.co.community.service.MemberService;
 import kr.co.community.service.PostService;
 import kr.co.community.vo.CommentVo;
 import kr.co.community.vo.PostVo;
@@ -22,8 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.security.Principal;
-import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
@@ -71,17 +67,22 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") Long id, Model model, @CurrentUser Member currentMember) throws Exception {
+    public String show(@PathVariable("id") Long id, String currentPage, Model model, @CurrentUser Member currentMember) throws Exception {
         Post post = postService.findAll(id);
         if(Objects.isNull(post)){
             throw new Exception("게시글이 없습니다.");
         }
 
+        Map<String, Post> postMap = postService.findPreviousPostById(post);
+
         if(currentMember == null || !post.isWriter(currentMember)){
             postService.updateView(id);
         }
 
+        model.addAttribute("currentPage", currentPage);
         model.addAttribute("post", post);
+        model.addAttribute("previous", postMap.get("previous"));
+        model.addAttribute("next", postMap.get("next"));
         model.addAttribute("commentVo", new CommentVo());
         return "app/posts/show";
     }
@@ -93,7 +94,7 @@ public class PostController {
             throw new Exception("게시글이 없습니다.");
         }
 
-        if(currentMember == null || !post.isWriter(currentMember)){
+        if(!post.isWriter(currentMember)){
             throw new Exception("수정 권한이 없습니다");
         }
         model.addAttribute("postVo", post);

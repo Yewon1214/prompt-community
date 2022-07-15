@@ -21,7 +21,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/posts/new/**", "post/**/edit").authenticated()
+                .antMatchers("/posts/new/**", "/posts/**/edit").authenticated()
+                .antMatchers("/member/mypage", "/member/mypage/**", "/member/edit/**", "/member/checkpwdview", "/member/check-pw").authenticated()
                 .anyRequest().permitAll()
                 .and()
                 .csrf()

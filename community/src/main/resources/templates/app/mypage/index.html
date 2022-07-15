@@ -4,7 +4,7 @@
 <head></head>
 <body>
 
-<div layout:fragment="content" class="container-fluid">
+<div layout:fragment="content" class="container">
 
 
     <div class="p-3 align-items-center mb-4 ">
@@ -22,13 +22,12 @@
             <div class="card-header">내 프로필</div>
             <div class="card-body text-center">
 
-                <img class="img-account-profile rounded-circle mb-2" src="/img/undraw_profile.svg" alt="">
-
-                <div class="small font-italic mb-4" >
+                <div class="small mb-2" >
                     <h5 th:text="'username: '+${member.username}"></h5>
                     <h5 th:text="'email: '+${member.email}"></h5>
-                    <a class="btn btn-primary" type="submit" th:href="@{/member/checkpwdview}">내 정보 수정</a>
-
+                    <h5 th:text="'작성 글 수: '+${postCnt}"></h5>
+                    <h5 th:text="'작성 댓글 수: '+${commentCnt}"></h5>
+                    <a class="btn btn-primary" type="submit" th:href="@{/member/checkpwdview}">비밀번호 변경</a>
 
                 </div>
                 <button class="btn btn-danger" onclick="deleteMember()">회원 탈퇴</button>

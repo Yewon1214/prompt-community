@@ -62,19 +62,16 @@ public class MemberController {
 
     @GetMapping("/mypage")
     public String showMyPage(Model model, @CurrentUser Member currentMember) throws Exception {
-        if (currentMember == null) {
-            throw new Exception("접근 권한이 없습니다.");
-        }
-
+        int commentCnt = commentService.countByMemberId(currentMember.getId());
+        int postCnt = postService.countByMemberId(currentMember.getId());
         model.addAttribute("member", currentMember);
+        model.addAttribute("commentCnt", commentCnt);
+        model.addAttribute("postCnt", postCnt);
         return "app/mypage/index";
     }
 
     @GetMapping("/mypage/myposts")
     public String showMyPost(Model model, @CurrentUser Member currentMember, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) throws Exception {
-        if (currentMember == null) {
-            throw new Exception("접근 권한이 없습니다.");
-        }
 
         Page<Post> postPage = postService.findByMember(currentMember, pageable);
         Pagination pagination = new Pagination(pageable);
@@ -91,9 +88,6 @@ public class MemberController {
 
     @GetMapping("/mypage/mycomments")
     public String showMyComments(Model model, @CurrentUser Member currentMember, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) throws Exception {
-        if (currentMember == null) {
-            throw new Exception("접근 권한이 없습니다.");
-        }
 
         Page<Comment> commentPage = commentService.findByMember(currentMember, pageable);
         Pagination pagination = new Pagination(pageable);

@@ -4,9 +4,9 @@
 
 <body>
 
-<div layout:fragment="content" class="container-fluid">
+<div layout:fragment="content" class="container">
 
-    <div class="container p-3 align-items-center mb-4">
+    <div class="p-3 mb-4">
 
         <div sec:authorize="isAuthenticated()">
             <div th:if="${#strings.equals(post.member.username, #authentication.getPrincipal().getMember().getUsername())}"
@@ -21,7 +21,7 @@
                 </div>
             </div>
         </div>
-        <table id="post" class="table table-bordered ">
+        <table id="post" class="table table-bordered text-center">
 
             <tbody>
             <tr>
@@ -41,7 +41,7 @@
                 <td th:text="${post.getViewCnt()}"></td>
             </tr>
             <tr>
-                <td id="content" colspan="2" th:utext="${post.getContent()}" class="card-body"></td>
+                <td id="content" colspan="2" th:utext="${post.getContent()}" class="card-body text-left"></td>
             </tr>
 
             </tbody>
@@ -114,21 +114,44 @@
 
         </div>
 
-        <div class="d-flex justify-content-between">
-            <a th:href="@{/posts}" class="d-none d-sm-inline-block btn btn-mg btn-primary shadow-sm">목록으로</a>
+        <div class="d-flex justify-content-between mb-3">
+            <a th:href="@{/posts(page=${currentPage})}" class="d-none d-sm-inline-block btn btn-mg btn-primary shadow-sm">목록으로</a>
 
             <a sec:authorize="isAuthenticated()" th:href="@{/posts/new}" class="d-none d-sm-inline-block btn btn-mg btn-primary shadow-sm">작성하기</a>
         </div>
 
-    </div>
-    <th:block layout:fragment="script">
+        <div class="row d-flex justify-content-between mx-auto">
+            <div class="clickable-row col-lg-4 col-sm-4 border bg-light px-2 " th:if="${previous != null}">
+                <div class="row d-flex justify-content-start align-items-center" th:attr="data-url=@{'/posts/'+${previous.id}}">
+                    <i class="col-2 fs-2 bi bi-arrow-left-circle"></i>
+                    <div class="col-10 text-left" th:attr="data-url=@{'/posts/'+${previous.id}}">
+                        <h6 class="mt-2">이전글</h6>
+                        <h5 class="m-0" th:text="${previous.title}"></h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-4 px-2" th:if="${previous == null}"></div>
+            <div class="clickable-row col-lg-4 col-sm-4 border bg-light px-2" th:if="${next != null}">
+                <div class="row d-flex justify-content-end align-items-center " th:attr="data-url=@{'/posts/'+${next.id}}">
+                    <div class="col-10 text-right" th:attr="data-url=@{'/posts/'+${next.id}}">
+                        <h6 class="mt-2">다음글</h6>
+                        <h5 th:text="${next.title}"></h5>
+                    </div>
+                    <i class="col-2 fs-2 bi bi-arrow-right-circle"></i>
+                </div>
+            </div>
+        </div>
 
-    </th:block>
+    </div>
 
 </div>
 
 <th:block layout:fragment="script">
     <script>
+        $('.clickable-row').click(function(e){
+            let row = e.target.parentNode;
+            location.href = row.getAttribute('data-url');
+        })
         $('#commentContent').keyup(function (e){
             var content=$(this).val();
             $('#counter').html("("+content.length+" / 500)");

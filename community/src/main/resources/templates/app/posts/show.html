@@ -13,7 +13,7 @@
                  class="d-flex mb-3 justify-content-end">
                 <form id="delete-form" method="post" th:action="@{'/posts/' + ${post.id}}" class="mr-2">
                     <input type="hidden" name="_method" value="delete">
-                    <input type="submit" class="d-md-inline-block btn btn-md btn-danger" value="삭제">
+                    <input type="submit" class="post-delete-btn d-md-inline-block btn btn-md btn-danger" value="삭제">
                 </form>
                 <div class="d-inline">
                     <a th:href="@{'/posts/' + ${post.id} + '/edit'}"
@@ -138,10 +138,16 @@
 
 <th:block layout:fragment="script">
     <script>
+        $('.post-delete-btn').click(function (e){
+            if(confirm("정말 삭제하시겠습니까?")){
+                let deleteForm = document.getElementById('delete-form');
+                deleteForm.submit();
+            }
+        })
         $('.clickable-row').click(function(e){
             let row = e.target.parentNode;
             location.href = row.getAttribute('data-url');
-        })
+        });
         $('#commentContent').keyup(function (e){
             var content=$(this).val();
             $('#counter').html("("+content.length+" / 500)");

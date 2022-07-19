@@ -29,10 +29,14 @@
                                 <input type="text" th:field="*{email}" th:value="*{email}" name="email" class="form-control form-control-user"
                                        th:id="email" readonly>
                             </div>
-
                             <div class="form-group">
-                                <label style="font-weight: bold" th:for="password">변경할 비밀번호 입력</label>
+                                <label style="font-weight: bold" th:for="password">현재 비밀번호 입력</label>
                                 <input type="password" th:id="password" th:name="password"
+                                       placeholder="현재 비밀번호를 입력하세요." class="form-control form-control-user" >
+                            </div>
+                            <div class="form-group">
+                                <label style="font-weight: bold" th:for="newPassword">변경할 비밀번호 입력</label>
+                                <input type="password" th:id="newPassword" th:name="newPassword"
                                        placeholder="변경할 비밀번호를 입력하세요." class="form-control form-control-user" >
                             </div>
                         </form>
@@ -53,12 +57,12 @@
 
         function memberUpdate(){
             var token = $("meta[name='_csrf']").attr("content");
-
+            const checkPassword = $('#password').val();
             const member = {
                 id: $('#userId').val(),
                 username: $('#username').val(),
                 email: $('#email').val(),
-                password: $('#password').val()
+                password: $('#newPassword').val()
             };
 
             if(!member.password || member.password.trim() === ""){
@@ -70,19 +74,38 @@
 
             if(confirmCheck === true){
                 $.ajax({
-                    type: 'PUT',
-                    url: '/member',
-                    headers: {'X-CSRF-TOKEN': token},
-                    contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify(member)
-                }).done(function(result){
-                    if(result ===true || result==="true"){
-                        alert('회원 수정이 완료되었습니다.');
-                        window.location.href="/member/mypage";
+                    type: 'GET',
+                    url: '/member/check-pw',
+                    data: {'checkPassword': checkPassword},
+                    dataType: "text"
+                }).done(function (result) {
+                    console.log("비밀번호 찾기");
+
+                    if (result === true || result === "true") {
+                        console.log("비밀번호 일치");
+                        $.ajax({
+                            type: 'PUT',
+                            url: '/member',
+                            headers: {'X-CSRF-TOKEN': token},
+                            contentType: 'application/json; charset=utf-8',
+                            data: JSON.stringify(member)
+                        }).done(function(result){
+                            if(result ===true || result==="true"){
+                                alert('회원 수정이 완료되었습니다.');
+                                window.location.href="/member/mypage";
+                            }
+                        }).fail(function(error){
+                            alert(JSON.stringify(error));
+                        });
+                    } else if (result === false || result === "false") {
+                        console.log('비밀번호 불일치');
+                        alert('비밀번호가 맞지 않습니다.');
+                        window.location.reload();
                     }
-                }).fail(function(error){
-                    alert(JSON.stringify(error));
-                });
+                }).fail(function (request, error) {
+                    alert("code" + request.status + "\n message:" + request.responseText + "\n error:" + JSON.stringify(error));
+                })
+
             }
         }
 

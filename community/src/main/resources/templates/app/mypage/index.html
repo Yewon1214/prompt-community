@@ -27,7 +27,7 @@
                     <h5 th:text="'email: '+${member.email}"></h5>
                     <h5 th:text="'작성 글 수: '+${postCnt}"></h5>
                     <h5 th:text="'작성 댓글 수: '+${commentCnt}"></h5>
-                    <a class="btn btn-primary" type="submit" th:href="@{/member/checkpwdview}">비밀번호 변경</a>
+                    <a class="btn btn-primary" type="submit" th:href="@{'/member/edit/'+${member.id}}">비밀번호 변경</a>
 
                 </div>
                 <button class="btn btn-danger" onclick="deleteMember()">회원 탈퇴</button>

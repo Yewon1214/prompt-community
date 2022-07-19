@@ -152,16 +152,6 @@ public class MemberController {
         return true;
     }
 
-    @GetMapping("/checkpwdview")
-    public String checkPwdView(@CurrentUser Member currentMember, Model model) throws Exception {
-        if (currentMember == null) {
-            throw new Exception("잘못된 접근입니다.");
-        }
-
-        model.addAttribute("id", currentMember.getId());
-        return "app/members/checkpwd";
-    }
-
     @GetMapping("/check-pw")
     @ResponseBody
     public boolean checkPwd(@RequestParam String checkPassword, @CurrentUser Member currentMember) throws Exception {

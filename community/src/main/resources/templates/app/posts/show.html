@@ -20,34 +20,24 @@
                        class="d-md-inline-block btn btn-md btn-success shadow-md d-inline">수정</a>
                 </div>
             </div>
+            <h1 th:text="${post.getTitle()}"></h1>
+            <div class="information">
+                <div class="fs-5 fw-bold d-inline" th:text="${post.member.username} +' · '"></div>
+                <a class="fs-6 text-black-50 text-decoration-none" th:text="${#dates.format(post.updatedAt, 'yyy.MM.dd HH:mm')}"></a>
+            </div>
         </div>
-        <table id="post" class="table table-bordered text-center">
+        <hr>
+        <div th:utext="${post.content}"></div>
 
-            <tbody>
-            <tr>
-                <th>제목</th>
-                <td th:text="${post.getTitle()} "></td>
-            </tr>
-            <tr>
-                <th>작성자</th>
-                <td th:text="${post.getMember().getUsername()}"></td>
-            </tr>
-            <tr>
-                <th>작성일</th>
-                <td th:text="${#dates.format(post.getUpdatedAt(), 'yyyy.MM.dd HH:mm')}"></td>
-            </tr>
-            <tr>
-                <th>조회수</th>
-                <td th:text="${post.getViewCnt()}"></td>
-            </tr>
-            <tr>
-                <td id="content" colspan="2" th:utext="${post.getContent()}" class="card-body text-left"></td>
-            </tr>
-
-            </tbody>
-
-        </table>
-
+        <div th:if="${post.files.size() > 0}" class="mb-3">
+            <h5>첨부파일</h5>
+            <div class="row" th:each="file : ${post.files}">
+                <div class="col" >
+                    <a th:text="${file.originalName}" th:href="@{/files/{id}(id=${file.id})}"></a>
+                </div>
+            </div>
+        </div>
+        <hr>
         <div id="comment" class="mb-3 card">
             <div class="card-header"><h6>댓글</h6></div>
             <th:block th:if="${post.comments != null}" th:each="comment : ${post.comments}">
@@ -61,15 +51,15 @@
                             </span>
                             <span>
                                 <div sec:authorize="isAuthenticated()" class="d-inline">
-                                <th:block th:if="${#strings.equals(comment.member.username, #authentication.getPrincipal().getMember().getUsername())}" >
-                                    <form th:object="${comment.id}" th:action="@{'/comments/' + ${comment.id}}"
+                                    <th:block th:if="${#strings.equals(comment.member.username, #authentication.getPrincipal().getMember().getUsername())}" >
+                                        <form th:object="${comment.id}" th:action="@{'/comments/' + ${comment.id}}"
                                           th:method="delete" class="d-inline">
-                                        <button class="btn-danger btn btn-sm">삭제</button>
-                                    </form>
-                                    <button type="button" class="btn btn-sm btn-success" data-bs-toggle="collapse"
+                                         <button class="btn-danger btn btn-sm">삭제</button>
+                                        </form>
+                                        <button type="button" class="btn btn-sm btn-success" data-bs-toggle="collapse"
                                             th:attr="data-bs-target='#collapseComment'+${comment.id}"
                                             aria-expanded="false">수정</button>
-                                </th:block>
+                                    </th:block>
 
                                 </div>
                             </span>

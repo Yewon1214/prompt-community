@@ -31,15 +31,15 @@ public class File {
 
     private String fileType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
-
     @CreationTimestamp
     private Instant createdAt;
 
     @UpdateTimestamp
     private Instant updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     @Builder
     public File(String fileName, String originalName, String relativePath, String extension, Long size, String fileType){
@@ -50,4 +50,10 @@ public class File {
         this.size = size;
         this.fileType = fileType;
     }
+
+    public void assignPost(Post post){
+        this.post = post;
+    }
+
+
 }

@@ -3,6 +3,7 @@ package kr.co.community.controller;
 import kr.co.community.model.Comment;
 import kr.co.community.model.Member;
 import kr.co.community.model.Post;
+import kr.co.community.model.helper.CurrentUser;
 import kr.co.community.service.CommentService;
 import kr.co.community.service.MemberService;
 import kr.co.community.service.PostService;
@@ -42,9 +43,8 @@ public class CommentController {
     }
 
     @PutMapping("")
-    public String update(Long id, @ModelAttribute CommentVo commentVo, Principal principal) throws Exception {
+    public String update(Long id, @ModelAttribute CommentVo commentVo, @CurrentUser Member currentMember) throws Exception {
         Comment comment = commentService.findById(id);
-        Member currentMember = memberService.findByEmail(principal.getName());
         if(!comment.isWriter(currentMember)){
             throw new Exception("수정 권한이 없습니다.");
         }
@@ -56,11 +56,10 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") Long id, Principal principal) throws Exception {
+    public String delete(@PathVariable("id") Long id, @CurrentUser Member currentMember) throws Exception {
         Comment comment = commentService.findById(id);
-        Member member = memberService.findByEmail(principal.getName());
 
-        if(comment.getMember() != member) {
+        if(comment.getMember() != currentMember) {
             throw new Exception("삭제 권한이 없습니다.");
         }
 

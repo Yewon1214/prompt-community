@@ -4,6 +4,7 @@ import kr.co.community.model.Member;
 import kr.co.community.model.Pagination;
 import kr.co.community.model.Post;
 import kr.co.community.model.helper.CurrentUser;
+import kr.co.community.service.FileService;
 import kr.co.community.service.PostService;
 import kr.co.community.vo.CommentVo;
 import kr.co.community.vo.PostVo;
@@ -19,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
@@ -28,6 +30,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+    private final FileService fileService;
 
     @GetMapping("")
     public String index(Model model, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -53,7 +56,7 @@ public class PostController {
     }
 
     @PostMapping("")
-    public String save(@CurrentUser Member currentMember, @Valid @ModelAttribute PostVo postVo, BindingResult bindingResult) {
+    public String save(@CurrentUser Member currentMember, @Valid @ModelAttribute PostVo postVo, BindingResult bindingResult) throws Exception {
 
         if(bindingResult.hasErrors()){
             return "app/posts/new";
@@ -61,8 +64,10 @@ public class PostController {
 
         Post post = Post.builder().title(postVo.getTitle())
                 .content(postVo.getContent())
-                .member(currentMember).build();
-        postService.savePost(post);
+                .member(currentMember)
+                .build();
+        postService.save(post, postVo);
+
         return "redirect:/posts/" + post.getId();
     }
 
@@ -114,7 +119,9 @@ public class PostController {
         }
 
         postForUpdate.update(postVo);
-        postService.savePost(postForUpdate);
+
+        postService.save(postForUpdate, postVo);
+
         return "redirect:/posts/"+ id;
     }
 

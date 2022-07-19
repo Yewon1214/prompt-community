@@ -12,6 +12,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,7 +27,7 @@ public class Post {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, length=1000)
+    @Column(nullable = false, length=100000)
     private String content;
 
     private int viewCnt;
@@ -37,9 +38,11 @@ public class Post {
     @UpdateTimestamp
     private Instant updatedAt;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<File> files = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_id")
@@ -60,4 +63,5 @@ public class Post {
         this.title=postVo.getTitle();
         this.content=postVo.getContent();
     }
+
 }

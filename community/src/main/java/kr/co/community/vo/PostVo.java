@@ -1,9 +1,15 @@
 package kr.co.community.vo;
 
+import kr.co.community.model.File;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -17,9 +23,18 @@ public class PostVo {
     @NotEmpty(message = "내용은 빈칸일 수 없습니다.")
     private String content;
 
-    @Builder
-    public PostVo(String title, String content){
-        this.title = title;
-        this.content = content;
+    private List<MultipartFile> files;
+
+    private Long[] deleteFileIds;
+
+    public List<Long> getDeleteFileIds(){
+        if(Objects.isNull(this.deleteFileIds)){
+            return new ArrayList<>();
+        }
+        return Arrays.asList(this.deleteFileIds);
+    }
+
+    public boolean hasFile(){
+        return this.files.isEmpty();
     }
 }

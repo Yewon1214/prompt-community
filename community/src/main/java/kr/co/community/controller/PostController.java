@@ -3,6 +3,7 @@ package kr.co.community.controller;
 import kr.co.community.model.Member;
 import kr.co.community.model.Pagination;
 import kr.co.community.model.Post;
+import kr.co.community.model.SearchParam;
 import kr.co.community.model.helper.CurrentUser;
 import kr.co.community.service.FileService;
 import kr.co.community.service.PostService;
@@ -30,21 +31,20 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
-    private final FileService fileService;
 
     @GetMapping("")
-    public String index(Model model, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String index(Model model,@PageableDefault(size=10) Pageable pageable, @ModelAttribute SearchParam searchParam) {
 
-        Page<Post> postPage = postService.findAll(pageable);
-
-        Pagination pagination = new Pagination(postPage.getPageable());
+        Pagination pagination = new Pagination(pageable);
+        Page<Post> postPage = postService.findBySearchParam(searchParam, pageable);
         pagination.setTotalPages(postPage.getTotalPages());
         pagination.setTotalElements(postPage.getTotalElements());
+        pagination.setQuery(searchParam.getQueryParams());
 
-        String[] orderBy = String.valueOf(pageable.getSort()).split(":");
         model.addAttribute("postPage", postPage.getContent());
-        model.addAttribute("orderBy", orderBy[0]);
         model.addAttribute("pagination", pagination);
+        model.addAttribute("searchParam", searchParam);
+        log.error(searchParam.getOrderBy());
 
         return "app/posts/index";
     }

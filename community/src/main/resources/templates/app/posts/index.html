@@ -12,23 +12,42 @@
         <div class="mb-3 justify-content-start">
             <h3>자유게시판</h3>
         </div>
-        <div class="mb-3 justify-content-between d-flex align-items-center">
-            <h6 class="mb-0" th:text="'총 '+${pagination.getTotalElements()}+'개의 글'"></h6>
-
-            <div class="d-inline-flex">
-                <select class="custom-select custom-select-sm mr-2" onchange="pageSizeChange(this)">
-                    <option value="5" th:selected="${pagination.pageSize == 5}">5</option>
-                    <option value="10" th:selected="${pagination.pageSize == 10}">10</option>
-                    <option value="20" th:selected="${pagination.pageSize == 20}">20</option>
-                </select>
-                <select class="custom-select custom-select-sm mr-2" style="width: auto" onchange="pageSortChange(this)">
-                    <option value="viewCnt" th:selected="${orderBy == 'viewCnt'}">조회순</option>
-                    <option value="id" th:selected="${orderBy == 'id'}">최신순</option>
-                </select>
-
+        <form id="search-form" th:action="@{'/posts?size=' + ${pagination.pageSize}}" th:object="${searchParam}">
+            <div class="justify-content-center d-flex">
+                <div class="row mr-2 form-group form-inline" >
+                    <select id="search-board-select" class="custom-select custom-select-sm" style="width: 60px">
+                        <option value="title" th:selected="${searchParam.title} != null">제목</option>
+                        <option value="content" th:selected="${searchParam.content} != null">내용</option>
+                    </select>
+                </div>
+                <div class="row form-group form-inline">
+                    <div class="input-group flex-fill">
+                        <label for="title" class="d-none"></label>
+                        <input id="title" type="text" class="search-board-text form-control form-control-user" name="title"/>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">검색</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+            <div class="mb-3 justify-content-between d-flex align-items-center">
+                <h6 class="mb-0" th:text="'총 '+${pagination.getTotalElements()}+'개의 글'"></h6>
 
+                <div class="d-inline-flex">
+                    <select class="custom-select custom-select-sm mr-2" onchange="pageSizeChange(this)">
+                        <option value="5" th:selected="${pagination.pageSize == 5}">5</option>
+                        <option value="10" th:selected="${pagination.pageSize == 10}">10</option>
+                        <option value="20" th:selected="${pagination.pageSize == 20}">20</option>
+                    </select>
+                    <select class="custom-select custom-select-sm mr-2" id="orderBy" name="orderBy" style="width: auto;" onchange="pageSortChange()">
+                        <option value="viewCnt" th:selected="${searchParam.orderBy == 'viewCnt'}">조회순</option>
+                        <option value="createdAt" th:selected="${searchParam.orderBy == 'createdAt'}">최신순</option>
+                    </select>
+
+                </div>
+            </div>
+
+        </form>
         <table class="table table-hover text-center">
             <thead>
             <tr>
@@ -41,9 +60,15 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="clickable-row" th:each="post, iter : ${postPage}" th:attr="data-url=@{'/posts/' + ${post.id} +'?currentPage=' + ${pagination.pageNumber}}">
-                <td th:text="${pagination.getTotalElements()-(pagination.pageNumber*pagination.pageSize + iter.index)}"></td>
-                <td th:text="${post.title}" class="text-left"></td>
+            <tr th:if="${postPage.isEmpty()}">
+                <td colspan="3">
+                    데이터가 존재하지 않습니다.
+                </td>
+            </tr>
+            <tr class="clickable-row" th:each="post, iter : ${postPage}"
+                th:attr="data-url=@{'/posts/' + ${post.id} +'?currentPage=' + ${pagination.pageNumber}}">
+                <td th:text="${pagination.totalElements-(pagination.pageNumber*pagination.pageSize + iter.index)}"></td>
+                <td th:text="${post.title}" class="text-left text-truncate"></td>
                 <td th:text="${post.member.username}"></td>
                 <td th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd')}"></td>
                 <td th:text="${post.viewCnt}"></td>
@@ -59,6 +84,21 @@
 
     </div>
     <script th:inline="javascript">
+
+        var searchPostText = $('.search-board-text');
+        var searchPostSelect = $('#search-board-select');
+
+        searchPostText.attr('id', searchPostSelect.val());
+        searchPostText.attr('name', searchPostSelect.val());
+        searchPostText.attr('value', searchPostText.val());
+
+        searchPostSelect.on("change", function (){
+            searchPostText.attr('id', $(this).val());
+            searchPostText.attr('name', $(this).val());
+            searchPostText.attr('value', searchPostText.val());
+            console.log(searchPostText.val());
+        })
+
         $('.clickable-row').click(function (e) {
             let row = e.target.parentNode;
             location.href = row.getAttribute('data-url');
@@ -67,20 +107,15 @@
         function pageSizeChange(e) {
             var select = $(e).val();
             /*<![CDATA[*/
-            var orderBy = /*[[ ${orderBy} ]]*/;
+            var query = /*[[ ${pagination.query} ]]*/;
             var page = /*[[ ${pagination.pageNumber} ]]*/;
             /*]]*/
 
-            window.location.href = '/posts?page=' + page + '&size=' + select + '&sort=' + orderBy + ',desc';
+            window.location.href = '/posts?page=' + page + '&size=' + select + '&' + query;
         }
-        function pageSortChange(e) {
-            var select = $(e).val();
-            /*<![CDATA[*/
-            var size = /*[[ ${pagination.pageSize} ]]*/;
-            var page = /*[[ ${pagination.pageNumber} ]]*/;
-            /*]]*/
 
-            window.location.href = '/posts?page=' + page + '&size=' + size + '&sort=' + select + ',desc';
+        function pageSortChange() {
+            $('#search-form').submit();
         }
     </script>
 </div>

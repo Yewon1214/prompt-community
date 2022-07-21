@@ -43,13 +43,9 @@ public class FileService {
     @PostConstruct
     public void initialize(){
         Path attachmentPath = Paths.get(this.uploadPath);
-        Path summernoteImgPath = Paths.get(this.uploadPath + "/summernote");
         try{
             if(!Files.exists(attachmentPath)){
                 Files.createDirectories(attachmentPath);
-            }
-            if(!Files.exists(summernoteImgPath)){
-                Files.createDirectories(summernoteImgPath);
             }
         }catch (IOException e){
             e.printStackTrace();
@@ -76,18 +72,29 @@ public class FileService {
             }
         }
 
-        for(MultipartFile multipartfile : files){
-            if(Objects.equals(multipartfile.getOriginalFilename(), "")){
+        for(MultipartFile multipartFile : files){
+            if(Objects.equals(multipartFile.getOriginalFilename(), "")){
                 continue;
             }
-            File file = createFile(multipartfile);
+
+            File file = createFile(multipartFile);
 
             file.assignPost(post);
             file = fileRepository.saveAndFlush(file);
-            Path path = Paths.get(this.uploadPath + file.getRelativePath());
-            Files.copy(multipartfile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            uploadFile(multipartFile, file);
         }
+    }
 
+    @Transactional
+    public List<File> saveImages(MultipartFile[] multipartFiles) throws IOException {
+        List<File> files = new ArrayList<>();
+        for (MultipartFile multipartFile: multipartFiles){
+            File file = createFile(multipartFile);
+            file = fileRepository.save(file);
+            uploadFile(multipartFile, file);
+            files.add(file);
+        }
+        return files;
     }
 
 
@@ -114,6 +121,27 @@ public class FileService {
         return fileRepository.findByPostId(id);
     }
 
+
+    @Transactional
+    public boolean deleteFile(File deleteFile){
+        fileRepository.delete(deleteFile);
+
+        String path = this.uploadPath + deleteFile.getRelativePath();
+        if(path == null){
+            return false;
+        }
+        return FileUtils.deleteQuietly(FileUtils.getFile(path));
+    }
+
+    public void deleteByPostId(Long id) {
+        fileRepository.deleteByPostId(id);
+    }
+
+    public void uploadFile(MultipartFile multipartFile, File file) throws IOException {
+        Path path = Paths.get(this.uploadPath + file.getRelativePath());
+        Files.copy(multipartFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+    }
+
     public ResponseEntity<?> downloadFileById(Long id) throws IOException {
         File file = this.findById(id);
         String encodedOriginalFileName = URLEncoder
@@ -128,31 +156,9 @@ public class FileService {
                 .body(resource);
     }
 
-    @Transactional
-    public boolean deleteFile(File deleteFile){
-        fileRepository.delete(deleteFile);
-
-        String path = this.uploadPath + deleteFile.getRelativePath();
-        if(path == null){
-            return false;
-        }
-        return FileUtils.deleteQuietly(FileUtils.getFile(path));
-    }
-
-
-    @Transactional
-    public List<File> saveImages(MultipartFile[] multipartFiles){
-        List<File> files = new ArrayList<>();
-        for (MultipartFile multipartFile: multipartFiles){
-            File file = createFile(multipartFile);
-            file = fileRepository.save(file);
-            files.add(file);
-        }
-        return files;
-    }
-
     public void flush() {
         fileRepository.flush();
     }
+
 
 }

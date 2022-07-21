@@ -6,12 +6,12 @@
 
     <ul class="pagination justify-content-center">
         <li class="page-item" th:if="${pagination.pageNumber > 0}">
-            <a class="page-link" th:href="@{${#httpServletRequest.requestURI}+'?page=0' + '&sort=' + ${orderBy} + ',desc'}" aria-label="Previous">
+            <a class="page-link" th:href="@{${#httpServletRequest.requestURI}+'?page=0' + '&' + ${pagination.query}}" aria-label="Previous">
                 <span aria-hidden="true"><<</span>
             </a>
         </li>
         <li class="page-item" th:if="${pagination.pageNumber > 0}">
-            <a class="page-link" th:href="@{${#httpServletRequest.requestURI}+'?page='+${pagination.pageNumber -1} + '&size=' + ${pagination.pageSize} + '&sort=' + ${orderBy} + ',desc'}" aria-label="Previous">
+            <a class="page-link" th:href="@{${#httpServletRequest.requestURI}+'?page='+${pagination.pageNumber -1} + '&size=' + ${pagination.pageSize} + '&' + ${pagination.query}}" aria-label="Previous">
                 <span aria-hidden="true"><</span>
             </a>
         </li>
@@ -19,14 +19,14 @@
                   th:each="i : ${#numbers.sequence(0, pagination.totalPages - 1)}">
             <li th:if="${i >= 0 && i < pagination.totalPages}" class="page-item"
                 th:classappend="${pagination.pageNumber == i ? 'active' : ''}">
-                <a th:href="@{${#httpServletRequest.requestURI}+'?page='+${i} + '&size=' + ${pagination.pageSize} + '&sort=' + ${orderBy} + ',desc'}" th:text="${i+1}" class="page-link"></a>
+                <a th:href="@{${#httpServletRequest.requestURI}+'?page='+${i} + '&size=' + ${pagination.pageSize} + '&' + ${pagination.query}}" th:text="${i+1}" class="page-link"></a>
             </li>
         </th:block>
         <th:block th:unless="${pagination.totalPages < 5}"
                   th:each="i : ${#numbers.sequence(pagination.pageNumber -2 , pagination.pageNumber+2)}">
             <li th:if="${i >= 0 && i < pagination.totalPages}" class="page-item"
                 th:classappend="${pagination.pageNumber == i ? 'active' : ''}">
-                <a th:href="@{${#httpServletRequest.requestURI}+'?page='+${i} + '&size=' + ${pagination.pageSize} + '&sort=' + ${orderBy} + ',desc'}" th:text="${i+1}" class="page-link"></a>
+                <a th:href="@{${#httpServletRequest.requestURI}+'?page='+${i} + '&size=' + ${pagination.pageSize} + '&' + ${pagination.query}}" th:text="${i+1}" class="page-link"></a>
             </li>
         </th:block>
         <li class="page-item" th:if="${pagination.pageNumber < pagination.totalPages - 1}">

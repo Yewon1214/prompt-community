@@ -26,7 +26,7 @@ public class FileController {
     }
 
     @PostMapping("/summernote")
-    public ResponseEntity<?> uploadImage(MultipartFile[] multipartFiles){
+    public ResponseEntity<?> uploadImage(MultipartFile[] multipartFiles) throws IOException {
         List<File> images = fileService.saveImages(multipartFiles);
         return ResponseEntity.ok().body(images);
     }

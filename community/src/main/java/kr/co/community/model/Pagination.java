@@ -13,6 +13,7 @@ public class Pagination implements Pageable {
     private int totalPages;
     private long totalElements;
     private Sort sort;
+    private String query="";
 
     public Pagination(int pageNum, int pageSize, Sort sort) {
         this.pageNum = pageNum;
@@ -34,6 +35,9 @@ public class Pagination implements Pageable {
         this.totalElements = totalElements;
     }
 
+    public void setQuery(String query){
+        this.query = query;
+    }
 
     public long getIndex(int index){
         if(this.getTotalElements() < this.getPageSize()){
@@ -61,6 +65,8 @@ public class Pagination implements Pageable {
     public long getTotalElements() {
         return totalElements;
     }
+
+    public String getQuery() { return query;}
 
     @Override
     public int getPageNumber() {

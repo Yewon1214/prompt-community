@@ -6,6 +6,7 @@ import kr.co.community.repository.FileRepository;
 import kr.co.community.vo.PostVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnailator;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,8 +19,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 import javax.transaction.Transactional;
+import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
@@ -79,6 +84,11 @@ public class FileService {
 
             File file = createFile(multipartFile);
 
+            if(file.getFileType().startsWith("image")){
+                FileOutputStream thumbnail = new FileOutputStream(new java.io.File(uploadPath, "s_"+file.getFileName()));
+                Thumbnailator.createThumbnail(multipartFile.getInputStream(), thumbnail, 100, 100);
+                thumbnail.close();
+            }
             file.assignPost(post);
             file = fileRepository.saveAndFlush(file);
             uploadFile(multipartFile, file);
@@ -102,6 +112,7 @@ public class FileService {
         String timeStamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
         String fileName = String.format("%s_%d", timeStamp, this.sequence);
         String extension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
+
         File file = File.builder()
                 .fileName(fileName)
                 .originalName(multipartFile.getOriginalFilename())
@@ -129,6 +140,11 @@ public class FileService {
         String path = this.uploadPath + deleteFile.getRelativePath();
         if(path == null){
             return false;
+        }
+        if(deleteFile.getFileType().startsWith("image")){
+            String realname = deleteFile.getRelativePath().substring(1,20);
+            String thumbnailPath = this.uploadPath + "/s_" + realname;
+            FileUtils.deleteQuietly(FileUtils.getFile(thumbnailPath));
         }
         return FileUtils.deleteQuietly(FileUtils.getFile(path));
     }

@@ -25,12 +25,14 @@ public class PostSpecification {
 
             if(searchParam != null){
 
-                if(searchParam.getTitle() != null && !searchParam.getTitle().equals("")){
-                    predicates.add(cb.like(root.get(Post_.title), "%" + searchParam.getTitle() + "%"));
+                if(searchParam.getKeyword() != null && !searchParam.getKeyword().equals("")){
+                    predicates.add(cb.like(root.get(Post_.title), "%" + searchParam.getKeyword() + "%"));
+                    predicates.add(cb.like(root.get(Post_.content), "%" + searchParam.getKeyword() + "%"));
                 }
-                if(searchParam.getContent() != null && !searchParam.getContent().equals("")){
-                    predicates.add(cb.like(root.get(Post_.content), "%" + searchParam.getContent() + "%"));
-                }
+
+//                if(searchParam.getTag() != null && !searchParam.getTag().equals("")){
+//                    predicates.add(cb.like(root.get(Post_.tag), "%" + searchParam.getTag() + "%"));
+//                }
 
                 if(searchParam.getOrderBy() != null && !searchParam.getOrderBy().equals("")){
                     if(searchParam.getOrderBy().equals("createdAt")){

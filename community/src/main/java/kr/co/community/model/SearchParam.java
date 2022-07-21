@@ -12,19 +12,18 @@ import java.util.StringJoiner;
 @Getter
 @Setter
 public class SearchParam {
-    private String title;
-    private String content;
+    private String keyword;
+    private String tag;
     private String orderBy="createdAt";
-    private String size="10";
 
     public String getQueryParams() {
         StringJoiner sj = new StringJoiner("&");
         try {
-            if (this.title != null && !this.title.equals("")) {
-                sj.add(String.format("title=%s", URLEncoder.encode(this.title, "UTF-8")));
+            if (this.keyword != null && !this.keyword.equals("")) {
+                sj.add(String.format("keyword=%s", URLEncoder.encode(this.keyword, "UTF-8")));
             }
-            if (this.content != null && !this.content.equals("")) {
-                sj.add(String.format("content=%s", URLEncoder.encode(this.content, "UTF-8")));
+            if (this.tag != null && !this.tag.equals("")) {
+                sj.add(String.format("tag=%s", URLEncoder.encode(this.tag, "UTF-8")));
             }
             if (this.orderBy != null && !this.orderBy.equals("")) {
                 sj.add(String.format("orderBy=%s", URLEncoder.encode(this.orderBy, "UTF-8")));

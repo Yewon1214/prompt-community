@@ -33,7 +33,7 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("")
-    public String index(Model model,@PageableDefault(size=10) Pageable pageable, @ModelAttribute SearchParam searchParam) {
+    public String index(Model model,@PageableDefault(size=5) Pageable pageable, @ModelAttribute SearchParam searchParam) {
 
         Pagination pagination = new Pagination(pageable);
         Page<Post> postPage = postService.findBySearchParam(searchParam, pageable);
@@ -44,7 +44,6 @@ public class PostController {
         model.addAttribute("postPage", postPage.getContent());
         model.addAttribute("pagination", pagination);
         model.addAttribute("searchParam", searchParam);
-        log.error(searchParam.getOrderBy());
 
         return "app/posts/index";
     }

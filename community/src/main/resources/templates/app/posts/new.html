@@ -42,7 +42,7 @@
 
             <div class="justify-content-between d-flex">
                 <a class="btn btn-primary btn-user" th:href="@{/posts}">목록으로</a>
-                <button type="submit" class="post-save btn btn-primary btn-user" th:text="${postVo.id == null ? '등록하기' : '수정하기'}"></button>
+                <button class="post-save btn btn-primary btn-user" th:text="${postVo.id == null ? '등록하기' : '수정하기'}" onclick="postSave(this)"></button>
             </div>
         </form>
     </div>
@@ -53,11 +53,8 @@
 
     <script src="/js/summernote/summernote-lite.min.js"></script>
     <script src="/js/summernote/lang/summernote-ko-KR.js"></script>
-    <script >
-        $('#post-save').click(function(e){
-            var data = document.getElementById('summernote').val();
-            console.log(data);
-        });
+    <script>
+
 
         let post = new Post();
         let content = '[[${postVo.getContent()}]]'.replaceAll("\"", "");

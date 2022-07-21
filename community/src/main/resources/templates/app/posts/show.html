@@ -11,13 +11,13 @@
         <div sec:authorize="isAuthenticated()">
             <div th:if="${#strings.equals(post.member.username, #authentication.getPrincipal().getMember().getUsername())}"
                  class="d-flex mb-3 justify-content-end">
-                <form id="delete-form" method="post" th:action="@{'/posts/' + ${post.id}}" class="mr-2">
+                <form id="delete-form" method="post" th:action="@{'/posts/' + ${post.id}}" class="m-0">
                     <input type="hidden" name="_method" value="delete">
                     <input type="submit" class="post-delete-btn d-md-inline-block btn btn-md btn-danger" value="삭제">
                 </form>
-                <div class="d-inline">
+                <div class="d-inline align-items-center">
                     <a th:href="@{'/posts/' + ${post.id} + '/edit'}"
-                       class="d-md-inline-block btn btn-md btn-success shadow-md d-inline">수정</a>
+                       class="d-md-inline-block btn btn-md btn-success shadow-md d-inline ml-2">수정</a>
                 </div>
             </div>
             <h1 th:text="${post.getTitle()}"></h1>

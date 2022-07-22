@@ -6,7 +6,7 @@
 
     <ul class="pagination justify-content-center">
         <li class="page-item" th:if="${pagination.pageNumber > 0}">
-            <a class="page-link" th:href="@{${#httpServletRequest.requestURI}+'?page=0' + '&' + ${pagination.query}}" aria-label="Previous">
+            <a class="page-link" th:href="@{${#httpServletRequest.requestURI}+'?page=0' +'&size=' + ${pagination.pageSize} + '&' + ${pagination.query}}" aria-label="Previous">
                 <span aria-hidden="true"><<</span>
             </a>
         </li>
@@ -30,12 +30,12 @@
             </li>
         </th:block>
         <li class="page-item" th:if="${pagination.pageNumber < pagination.totalPages - 1}">
-            <a class="page-link" th:href="@{${#httpServletRequest.requestURI}+'?page='+${pagination.pageNumber + 1} + '&size=' + ${pagination.pageSize}+ '&sort=' + ${orderBy}+ ',desc'}" aria-label="Next">
+            <a class="page-link" th:href="@{${#httpServletRequest.requestURI}+'?page='+${pagination.pageNumber + 1} + '&size=' + ${pagination.pageSize}+ '&' + ${pagination.query}}" aria-label="Next">
                 <span aria-hidden="true">></span>
             </a>
         </li>
         <li class="page-item" th:if="${pagination.pageNumber < pagination.totalPages - 1}">
-            <a class="page-link" th:href="@{${#httpServletRequest.requestURI}+'?page='+${pagination.totalPages - 1} +'&size=' + ${pagination.pageSize} + '&sort=' + ${orderBy}+ ',desc'}" aria-label="Previous">
+            <a class="page-link" th:href="@{${#httpServletRequest.requestURI}+'?page='+${pagination.totalPages - 1} +'&size=' + ${pagination.pageSize} + '&' + ${pagination.query}}" aria-label="Previous">
                 <span aria-hidden="true">>></span>
             </a>
         </li>

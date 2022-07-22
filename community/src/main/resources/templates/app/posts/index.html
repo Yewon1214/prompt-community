@@ -51,15 +51,15 @@
         <div class="list-group text-center" th:if="${postPage.isEmpty()}">
             <div class="list-group-item mb-2 fs-2">데이터가 존재하지 않습니다.</div>
         </div>
-        <div class="list-group">
+        <div class="list-group mb-2">
             <div class="list-group-item p-3 d-flex justify-content-between" th:each="post, iter : ${postPage}">
                 <div class="col align-middle">
-                <a th:href="@{'/posts/'+${post.id} +'?currentPage='+${pagination.pageNumber}}" class="row text-decoration-none">
-                    <strong class="fs-3" th:text="${post.title}"></strong>
-                    <div class="fs-6 text-black-50" th:with="str=${#strings.arraySplit(post.content, '\n')}">
-                        <p th:utext="${#strings.abbreviate(str[0], 20)}"></p>
-                    </div>
-                </a>
+                    <a th:href="@{'/posts/'+${post.id} +'?currentPage='+${pagination.pageNumber}}" class="row text-decoration-none">
+                        <strong class="fs-3" th:text="${post.title}"></strong>
+                        <div class="fs-6 text-black-50" th:with="str=${#strings.arraySplit(post.content, '\n')}">
+                            <p th:utext="${#strings.abbreviate(str[0], 20)}"></p>
+                        </div>
+                    </a>
                     <div class="detail_info">
                         <span th:text="${'댓글'+post.comments.size()}"></span>
                         <span >|</span>
@@ -71,7 +71,7 @@
                     </div>
                 </div>
 
-                <a th:if="${!post.files.isEmpty()}" th:href="@{'/posts/'+${post.id} +'?currentPage='+${pagination.pageNumber}}" class="text-decoration-none flex-row-reverse">
+                <a th:if="${!post.files.isEmpty()}" th:href="@{'/posts/'+${post.id} +'?currentPage='+${pagination.pageNumber}}" class="text-decoration-none ">
                     <div th:if="${post.files.get(0).fileType.startsWith('image')}">
                     <img th:src="${'/upload/s_'+#strings.substring(post.files.get(0).relativePath,1,20)}" style="width: 120px; height: 120px;" alt="썸네일">
                     </div>

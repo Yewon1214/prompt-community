@@ -26,7 +26,7 @@
                 <textarea id="summernote" name="content" th:field="*{content}" class="form-control"></textarea>
                 </div>
             <div class="form-group">
-                <input type="file" name="files" id="file-input" multiple>
+                <input type="file" name="files" th:field="*{files}" id="file-input" multiple>
                 <div class="mt-3" th:if="${postVo.files != null}">
                     <div class="fw-light" th:attrappend="data-id=${file.id}" th:each="file : ${postVo.files}">
                         <a th:href="@{/files/{id}(id=${file.id})}" th:text="${file.originalName}"></a>
@@ -50,7 +50,7 @@
 </div>
 <th:block layout:fragment="script">
     <link th:href="@{/css/summernote/summernote-lite.min.css}" rel="stylesheet">
-
+    <script th:src="@{/js/summernote/SummernoteManager.js}"></script>
     <script src="/js/summernote/summernote-lite.min.js"></script>
     <script src="/js/summernote/lang/summernote-ko-KR.js"></script>
     <script>

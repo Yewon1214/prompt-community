@@ -59,7 +59,12 @@ class SummernoteManager{
             processData: false,
             success: function(data){
                 for(var i=0; i<data.length; i++){
-                    editor.summernote('insertImage', '/upload' + data[i].relativePath);
+                    var image = $('<img>').attr({
+                        src: '/upload'+data[i].relativePath,
+                        class: 'img-fluid'
+                    });
+                    editor.summernote('insertNode', image[0]);
+                    // editor.summernote('insertImage', '/upload' + data[i].relativePath);
                 }
             },
             error: function(jqXHR, textStatus, errorThrown){

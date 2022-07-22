@@ -9,6 +9,7 @@ import kr.co.community.specification.PostSpecification;
 import kr.co.community.vo.PostVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -83,8 +84,14 @@ public class PostService {
 
     @Transactional
     public void deleteById(Long id) throws FileNotFoundException {
+        Post post = this.findById(id);
+        if(post.getContent().contains("<img")){
+            String[] deletePath = post.getContent().split("upload")[1].split("\"");
+            fileService.deleteImage(deletePath[0]);
+        }
         List<File> files = fileService.findByPostId(id);
         if (files.size() > 0) {
+
             fileService.deleteByPostId(id);
             for (File file : files) {
                 boolean flag = fileService.deleteFile(file);

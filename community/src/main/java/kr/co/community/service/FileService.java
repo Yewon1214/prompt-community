@@ -177,4 +177,9 @@ public class FileService {
     }
 
 
+    public void deleteImage(String imagePath) {
+        String path = this.uploadPath+imagePath;
+        boolean flag = FileUtils.deleteQuietly(FileUtils.getFile(path));
+
+    }
 }

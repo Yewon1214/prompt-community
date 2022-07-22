@@ -59,7 +59,7 @@ public class CommentController {
     public String delete(@PathVariable("id") Long id, @CurrentUser Member currentMember) throws Exception {
         Comment comment = commentService.findById(id);
 
-        if(comment.getMember() != currentMember) {
+        if(!comment.isWriter(currentMember)) {
             throw new Exception("삭제 권한이 없습니다.");
         }
 

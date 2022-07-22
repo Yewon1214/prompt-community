@@ -127,7 +127,6 @@ public class PostController {
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") Long id, @CurrentUser Member currentMember) throws Exception {
         Post post = postService.findById(id);
-
         if(!post.isWriter(currentMember)){
             throw new Exception("삭제 권한이 없습니다.");
         }

@@ -179,7 +179,9 @@ public class FileService {
 
     public void deleteImage(String imagePath) {
         String path = this.uploadPath+imagePath;
+        File file = fileRepository.findByRelativePath(imagePath);
+        fileRepository.delete(file);
         boolean flag = FileUtils.deleteQuietly(FileUtils.getFile(path));
-
+        log.error(String.valueOf(flag));
     }
 }

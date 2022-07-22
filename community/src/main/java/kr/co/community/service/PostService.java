@@ -86,8 +86,12 @@ public class PostService {
     public void deleteById(Long id) throws FileNotFoundException {
         Post post = this.findById(id);
         if(post.getContent().contains("<img")){
-            String[] deletePath = post.getContent().split("upload")[1].split("\"");
-            fileService.deleteImage(deletePath[0]);
+            String[] tmp = post.getContent().split("<img");
+            for(int i=1; i<tmp.length; i++){
+                String[] deletePath = tmp[i].split("upload")[1].split("\"");
+                fileService.deleteImage(deletePath[0]);
+            }
+
         }
         List<File> files = fileService.findByPostId(id);
         if (files.size() > 0) {

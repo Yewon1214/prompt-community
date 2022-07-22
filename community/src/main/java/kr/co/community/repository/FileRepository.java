@@ -15,4 +15,5 @@ public interface FileRepository extends JpaRepository<File, Long> {
 
     long deleteByPostId(long id);
 
+    File findByRelativePath(String imagePath);
 }

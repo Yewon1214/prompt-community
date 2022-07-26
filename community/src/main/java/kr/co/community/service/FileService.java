@@ -41,7 +41,7 @@ public class FileService {
 
     @Value("${spring.servlet.multipart.location}")
     public String uploadPath;
-    private Integer sequence = 0;
+
 
     private final FileRepository fileRepository;
 
@@ -58,7 +58,7 @@ public class FileService {
     }
 
     @Transactional
-    public void savePostFile(List<MultipartFile> files, List<Long> deleteFileIds, Post post) throws Exception {
+    public void savePostFile(List<MultipartFile> files, List<Long> deleteFileIds, List<Long> saveImgIds, Post post) throws Exception {
 
         if(!deleteFileIds.isEmpty()){
 
@@ -93,6 +93,15 @@ public class FileService {
             file = fileRepository.saveAndFlush(file);
             uploadFile(multipartFile, file);
         }
+
+        //썸머노트 이미지 처리
+        if(!saveImgIds.isEmpty()){
+            for(Long id: saveImgIds){
+                File file = this.findById(id);
+                file.assignPost(post);
+                fileRepository.saveAndFlush(file);
+            }
+        }
     }
 
     @Transactional
@@ -100,6 +109,9 @@ public class FileService {
         List<File> files = new ArrayList<>();
         for (MultipartFile multipartFile: multipartFiles){
             File file = createFile(multipartFile);
+            FileOutputStream thumbnail = new FileOutputStream(new java.io.File(uploadPath, "s_"+file.getFileName()));
+            Thumbnailator.createThumbnail(multipartFile.getInputStream(), thumbnail, 100, 100);
+            thumbnail.close();
             file = fileRepository.save(file);
             uploadFile(multipartFile, file);
             files.add(file);
@@ -110,7 +122,7 @@ public class FileService {
 
     private File createFile(MultipartFile multipartFile){
         String timeStamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
-        String fileName = String.format("%s_%d", timeStamp, this.sequence);
+        String fileName = String.format("%s", timeStamp);
         String extension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
 
         File file = File.builder()
@@ -141,6 +153,7 @@ public class FileService {
         if(path == null){
             return false;
         }
+        //썸네일 파일 지우기
         if(deleteFile.getFileType().startsWith("image")){
             String realname = deleteFile.getRelativePath().substring(1,20);
             String thumbnailPath = this.uploadPath + "/s_" + realname;
@@ -176,12 +189,4 @@ public class FileService {
         fileRepository.flush();
     }
 
-
-    public void deleteImage(String imagePath) {
-        String path = this.uploadPath+imagePath;
-        File file = fileRepository.findByRelativePath(imagePath);
-        fileRepository.delete(file);
-        boolean flag = FileUtils.deleteQuietly(FileUtils.getFile(path));
-        log.error(String.valueOf(flag));
-    }
 }

@@ -42,6 +42,7 @@
                     <select class="custom-select custom-select-sm" id="orderBy" name="orderBy" style="width: auto;" onchange="pageSortChange()">
                         <option value="viewCnt" th:selected="${searchParam.orderBy == 'viewCnt'}">조회순</option>
                         <option value="createdAt" th:selected="${searchParam.orderBy == 'createdAt'}">최신순</option>
+                        <option value="likeCnt" th:selected="${searchParam.orderBy == 'likeCnt'}">좋아요</option>
                     </select>
 
                 </div>
@@ -67,7 +68,9 @@
                         <span >|</span>
                         <span th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd hh:mm')}"></span>
                         <span >|</span>
-                        <a class="member" th:href="@{member/mypage}" th:text="${post.member.username}"></a>
+                        <span class="likeCnt" th:text="${'좋아요'+post.likeCnt}"></span>
+                        <span >|</span>
+                        <a class="member" th:href="@{'member/'+${post.member.id}}" th:text="${post.member.username}"></a>
                     </div>
                 </div>
 

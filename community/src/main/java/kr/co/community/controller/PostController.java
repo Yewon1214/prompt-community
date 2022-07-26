@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -82,6 +83,10 @@ public class PostController {
         if(currentMember == null || !post.isWriter(currentMember)){
             postService.updateView(id);
         }
+        if(currentMember != null){
+            int like = postService.findLike(id, currentMember.getId());
+            model.addAttribute("like", like);
+        }
 
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("post", post);
@@ -102,13 +107,13 @@ public class PostController {
             throw new Exception("수정 권한이 없습니다");
         }
         model.addAttribute("postVo", post);
-        return "app/posts/new";
+        return "app/posts/edit";
     }
 
     @PutMapping("")
     public String update(Long id, @CurrentUser Member currentMember, @Valid @ModelAttribute PostVo postVo, BindingResult bindingResult) throws Exception {
         if(bindingResult.hasErrors()){
-            return "app/posts/new";
+            return "app/posts/edit";
         }
 
         Post postForUpdate = postService.findById(id);
@@ -132,5 +137,12 @@ public class PostController {
         }
         postService.deleteById(id);
         return "redirect:/posts";
+    }
+
+    @PostMapping("/like")
+    @ResponseBody
+    public int like(Long memberId, Long postId){
+        int result = postService.saveLike(postId, memberId);
+        return result;
     }
 }

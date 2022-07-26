@@ -25,13 +25,21 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
 
     Page<Post> findAll(Pageable pageable);
 
-    void deleteAllByMemberId(Long id);
-
     @Modifying
     @Query("UPDATE Post p SET p.viewCnt = p.viewCnt+1 WHERE p.id = :id")
     int updateView(Long id);
 
-     @Query(value = "SELECT COUNT(p.id) FROM Post p " +
+    void deleteAllByMemberId(Long id);
+
+    @Query(value = "SELECT COUNT(p.id) FROM Post p " +
              "WHERE p.member.id = :id")
     int countByMemberId(Long id);
+
+    @Modifying
+    @Query(value="UPDATE Post p SET p.likeCnt = p.likeCnt+1 WHERE p.id =:id")
+    void plusLike(Long id);
+
+    @Modifying
+    @Query(value = "UPDATE Post p SET p.likeCnt = p.likeCnt-1 WHERE p.id = :id")
+    void minusLike(Long id);
 }

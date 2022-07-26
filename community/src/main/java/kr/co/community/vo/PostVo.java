@@ -23,9 +23,11 @@ public class PostVo {
     @NotEmpty(message = "내용은 빈칸일 수 없습니다.")
     private String content;
 
-    private List<MultipartFile> files;
+    private List<MultipartFile> fs;
 
     private Long[] deleteFileIds;
+
+    private Long[] saveImgIds;
 
     public List<Long> getDeleteFileIds(){
         if(Objects.isNull(this.deleteFileIds)){
@@ -34,7 +36,14 @@ public class PostVo {
         return Arrays.asList(this.deleteFileIds);
     }
 
+    public List<Long> getsaveImgIds(){
+        if(Objects.isNull(this.saveImgIds)){
+            return new ArrayList<>();
+        }
+        return Arrays.asList(this.saveImgIds);
+    }
+
     public boolean hasFile(){
-        return this.files.isEmpty();
+        return this.fs.isEmpty();
     }
 }

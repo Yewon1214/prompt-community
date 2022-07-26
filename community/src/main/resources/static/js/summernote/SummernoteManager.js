@@ -1,6 +1,7 @@
 class SummernoteManager{
-    constructor(content){
+    constructor(){
         var self = this;
+        this.ImgIds = [];
         this.options = {
             placeholder: '내용을 입력하세요',
             lang: "ko-KR",
@@ -41,6 +42,7 @@ class SummernoteManager{
         var token = $("meta[name='_csrf']").attr("content");
         var header = $("meta[name='_csrf_header']").attr("content");
         var data = new FormData();
+        var self = this;
 
         for(var i=0; i<files.length; i++){
             data.append("multipartFiles", files[i]);
@@ -59,12 +61,9 @@ class SummernoteManager{
             processData: false,
             success: function(data){
                 for(var i=0; i<data.length; i++){
-                    var image = $('<img>').attr({
-                        src: '/upload'+data[i].relativePath,
-                        class: 'img-fluid'
-                    });
-                    editor.summernote('insertNode', image[0]);
-                    // editor.summernote('insertImage', '/upload' + data[i].relativePath);
+                    self.ImgIds.push(data[i].id);
+                    console.log(data[i].id);
+                    editor.summernote('insertImage', '/upload'+data[i].relativePath);
                 }
             },
             error: function(jqXHR, textStatus, errorThrown){

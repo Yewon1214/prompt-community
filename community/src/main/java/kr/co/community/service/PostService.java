@@ -1,15 +1,12 @@
 package kr.co.community.service;
 
-import kr.co.community.model.File;
-import kr.co.community.model.Member;
-import kr.co.community.model.Post;
-import kr.co.community.model.SearchParam;
+import kr.co.community.model.*;
+import kr.co.community.repository.LikeRepository;
 import kr.co.community.repository.PostRepository;
 import kr.co.community.specification.PostSpecification;
 import kr.co.community.vo.PostVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,16 +15,15 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final LikeRepository likeRepository;
+    private final MemberService memberService;
     private final FileService fileService;
 
 
@@ -39,8 +35,26 @@ public class PostService {
     @Transactional
     public void save(Post post, PostVo postVo) throws Exception {
         postRepository.save(post);
-        if (postVo.getFiles().size() > 0) {
-            fileService.savePostFile(postVo.getFiles(), postVo.getDeleteFileIds(), post);
+        if (postVo.hasFile()) {
+            fileService.savePostFile(postVo.getFs(), postVo.getDeleteFileIds(), postVo.getsaveImgIds(), post);
+        }
+    }
+
+    @Transactional
+    public int saveLike(Long postId, Long memberId) {
+        LikeEntity findLikeEntity = likeRepository.findByPost_IdAndMember_Id(postId, memberId);
+        if(Objects.isNull(findLikeEntity)){
+            Member member = memberService.findById(memberId);
+            Post post = this.findById(postId);
+
+            LikeEntity likeEntity = LikeEntity.toLike(member, post);
+            likeRepository.save(likeEntity);
+            postRepository.plusLike(postId);
+            return 1;
+        }else{
+            likeRepository.deleteByPost_IdAndMember_Id(postId, memberId);
+            postRepository.minusLike(postId);
+            return 0;
         }
     }
 
@@ -65,12 +79,17 @@ public class PostService {
         return resultMap;
     }
 
-    public Page<Post> findAll(Pageable pageable) {
-        return postRepository.findAll(pageable);
-    }
-
     public Post findAll(Long id) {
         return postRepository.findByJoin(id);
+    }
+
+    public int findLike(Long postId, Long memberId) {
+        LikeEntity likeEntity = likeRepository.findByPost_IdAndMember_Id(postId, memberId);
+        if(Objects.isNull(likeEntity)){
+            return 0;
+        }else{
+            return 1;
+        }
     }
 
     public Page<Post> findByMember(Member member, Pageable pageable) {
@@ -84,15 +103,7 @@ public class PostService {
 
     @Transactional
     public void deleteById(Long id) throws FileNotFoundException {
-        Post post = this.findById(id);
-        if(post.getContent().contains("<img")){
-            String[] tmp = post.getContent().split("<img");
-            for(int i=1; i<tmp.length; i++){
-                String[] deletePath = tmp[i].split("upload")[1].split("\"");
-                fileService.deleteImage(deletePath[0]);
-            }
 
-        }
         List<File> files = fileService.findByPostId(id);
         if (files.size() > 0) {
 
@@ -123,4 +134,5 @@ public class PostService {
     public int countByMemberId(Long id) {
         return postRepository.countByMemberId(id);
     }
+
 }

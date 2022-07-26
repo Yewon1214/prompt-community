@@ -37,7 +37,37 @@
                 </div>
             </div>
         </div>
+
         <hr>
+
+        <div class="mb-3 d-flex justify-content-end">
+            <button id="like-check" class="btn-primary btn btn-user" th:value="${like}" type="button">
+                <span th:text="${post.likeCnt}>0 ? ${post.likeCnt} : '좋아요'"></span>
+                <span id="like-icon"><i class="bi bi-heart"></i></span></button>
+        </div>
+
+        <div class="row d-flex justify-content-between mx-auto mb-3">
+            <div class="clickable-row col-lg-4 col-sm-4 border bg-light px-2 " th:if="${previous != null}">
+                <div class="row d-flex justify-content-start align-items-center" th:attr="data-url=@{'/posts/'+${previous.id}}">
+                    <i class="col-2 fs-2 bi bi-arrow-left-circle"></i>
+                    <div class="col-10 text-left" th:attr="data-url=@{'/posts/'+${previous.id}}">
+                        <h6 class="mt-2">이전글</h6>
+                        <h5 class="m-0" th:text="${previous.title}"></h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-4 px-2" th:if="${previous == null}"></div>
+            <div class="clickable-row col-lg-4 col-sm-4 border bg-light px-2" th:if="${next != null}">
+                <div class="row d-flex justify-content-end align-items-center " th:attr="data-url=@{'/posts/'+${next.id}}">
+                    <div class="col-10 text-right" th:attr="data-url=@{'/posts/'+${next.id}}">
+                        <h6 class="mt-2">다음글</h6>
+                        <h5 th:text="${next.title}"></h5>
+                    </div>
+                    <i class="col-2 fs-2 bi bi-arrow-right-circle"></i>
+                </div>
+            </div>
+        </div>
+
         <div id="comment" class="mb-3 card">
             <div class="card-header"><h6>댓글</h6></div>
             <th:block th:if="${post.comments != null}" th:each="comment : ${post.comments}">
@@ -53,12 +83,12 @@
                                 <div sec:authorize="isAuthenticated()" class="d-inline">
                                     <th:block th:if="${#strings.equals(comment.member.username, #authentication.getPrincipal().getMember().getUsername())}" >
                                         <form th:object="${comment.id}" th:action="@{'/comments/' + ${comment.id}}"
-                                          th:method="delete" class="d-inline">
+                                              th:method="delete" class="d-inline">
                                          <button class="btn-danger btn btn-sm">삭제</button>
                                         </form>
                                         <button type="button" class="btn btn-sm btn-success" data-bs-toggle="collapse"
-                                            th:attr="data-bs-target='#collapseComment'+${comment.id}"
-                                            aria-expanded="false">수정</button>
+                                                th:attr="data-bs-target='#collapseComment'+${comment.id}"
+                                                aria-expanded="false">수정</button>
                                     </th:block>
 
                                 </div>
@@ -71,7 +101,7 @@
                                 <textarea th:name="content" class="form-control" maxlength="500" id="commentContent2" th:text="${comment.content}" required></textarea>
                                 <span id="counter2" style="color:#aaa;" th:value="'('+${comment.content.length()}+' / 500)'"></span>
                                 <div class="justify-content-end d-flex">
-                                <button type="submit" class="btn btn-primary btn-sm mt-2 ">등록</button>
+                                    <button type="submit" class="btn btn-primary btn-sm mt-2 ">등록</button>
                                 </div>
                             </form>
                         </div>
@@ -110,34 +140,53 @@
             <a sec:authorize="isAuthenticated()" th:href="@{/posts/new}" class="d-none d-sm-inline-block btn btn-mg btn-primary shadow-sm">작성하기</a>
         </div>
 
-        <div class="row d-flex justify-content-between mx-auto">
-            <div class="clickable-row col-lg-4 col-sm-4 border bg-light px-2 " th:if="${previous != null}">
-                <div class="row d-flex justify-content-start align-items-center" th:attr="data-url=@{'/posts/'+${previous.id}}">
-                    <i class="col-2 fs-2 bi bi-arrow-left-circle"></i>
-                    <div class="col-10 text-left" th:attr="data-url=@{'/posts/'+${previous.id}}">
-                        <h6 class="mt-2">이전글</h6>
-                        <h5 class="m-0" th:text="${previous.title}"></h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-sm-4 px-2" th:if="${previous == null}"></div>
-            <div class="clickable-row col-lg-4 col-sm-4 border bg-light px-2" th:if="${next != null}">
-                <div class="row d-flex justify-content-end align-items-center " th:attr="data-url=@{'/posts/'+${next.id}}">
-                    <div class="col-10 text-right" th:attr="data-url=@{'/posts/'+${next.id}}">
-                        <h6 class="mt-2">다음글</h6>
-                        <h5 th:text="${next.title}"></h5>
-                    </div>
-                    <i class="col-2 fs-2 bi bi-arrow-right-circle"></i>
-                </div>
-            </div>
-        </div>
 
     </div>
 
 </div>
 
 <th:block layout:fragment="script">
-    <script>
+    <script th:inline="javascript">
+        $(document).ready(function(){
+            let likeVal = document.getElementById('like-check').value;
+            const likeIcon = document.getElementById('like-icon');
+
+            if(likeVal > 0){
+                likeIcon.innerHTML= "<i class=\"bi bi-heart-fill\"></i>";
+            }else{
+                likeVal.innerHTML= "<i class=\"bi bi-heart\"></i>";
+            }
+        })
+        $('#like-check').click(function (e){
+            var token = $("meta[name='_csrf']").attr("content");
+            /*<![CDATA[*/
+            var postId = /*[[ ${post.id} ]]*/;
+            var memberId = /*[[ ${#authentication.getPrincipal().getMember().getId()} ]]*/;
+            /*]]*/
+            console.log(postId);
+            console.log(memberId);
+
+            $.ajax({
+                url: '/posts/like',
+                type: 'POST',
+                headers: {'X-CSRF-TOKEN': token},
+                data: {'memberId': memberId, 'postId': postId},
+                success: function(data){
+                    if(data === 1){
+                        $('#like-icon').attr("class", "bi bi-heart-fill");
+                        alert('좋아요를 누르셨습니다.');
+                        location.href = '/posts/'+postId;
+                    }else{
+                        $('#like-icon').attr("class", "bi bi-heart");
+                        alert('좋아요를 취소하셨습니다.');
+                        location.href = '/posts/'+postId;
+                    }
+                }, error: function (){
+                    console.log()
+                }
+            })
+
+        });
         $('.post-delete-btn').click(function (e){
             if(confirm("정말 삭제하시겠습니까?")){
                 let deleteForm = document.getElementById('delete-form');

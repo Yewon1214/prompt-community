@@ -39,6 +39,8 @@ public class PostSpecification {
                         query.orderBy(cb.desc(root.get(Post_.createdAt)));
                     } else if(searchParam.getOrderBy().equals("viewCnt")){
                         query.orderBy(cb.desc(root.get(Post_.viewCnt)), cb.desc(root.get(Post_.createdAt)));
+                    } else if(searchParam.getOrderBy().equals("likeCnt")){
+                        query.orderBy(cb.desc(root.get(Post_.likeCnt)), cb.desc(root.get(Post_.createdAt)));
                     }
                 }else{
                     query.orderBy(cb.desc(root.get(Post_.createdAt)));

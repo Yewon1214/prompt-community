@@ -42,7 +42,7 @@ public class File {
     private Post post;
 
     @Builder
-    public File(String fileName, String originalName, String relativePath, String extension, Long size, String fileType){
+    public File(String fileName, String originalName, String relativePath, String extension, Long size, String fileType, int sequence){
         this.fileName = fileName;
         this.originalName = originalName;
         this.relativePath = relativePath;

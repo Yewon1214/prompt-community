@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -30,7 +30,11 @@ public class Post {
     @Column(nullable = false, length=1000)
     private String content;
 
+    @Column(nullable = false)
     private int viewCnt;
+
+    @Column(nullable = false)
+    private int likeCnt;
 
     @CreationTimestamp
     private Instant createdAt;

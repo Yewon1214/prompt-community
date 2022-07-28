@@ -35,7 +35,8 @@ public class PostService {
     @Transactional
     public void save(Post post, PostVo postVo) throws Exception {
         postRepository.save(post);
-        if (postVo.hasFile()) {
+
+        if (postVo.getFs() != null && !postVo.hasFile()) {
             fileService.savePostFile(postVo.getFs(), postVo.getDeleteFileIds(), postVo.getsaveImgIds(), post);
         }
     }

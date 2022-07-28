@@ -172,7 +172,7 @@
                 headers: {'X-CSRF-TOKEN': token},
                 data: {'memberId': memberId, 'postId': postId},
                 success: function(data){
-                    if(data === 1){
+                    if(data){
                         $('#like-icon').attr("class", "bi bi-heart-fill");
                         alert('좋아요를 누르셨습니다.');
                         location.href = '/posts/'+postId;

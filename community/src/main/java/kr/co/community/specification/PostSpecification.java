@@ -22,17 +22,16 @@ public class PostSpecification {
 
             Predicate result = null;
             List<Predicate> predicates = new ArrayList<>();
+            Boolean searchWordFlag = false;
 
             if(searchParam != null){
 
                 if(searchParam.getKeyword() != null && !searchParam.getKeyword().equals("")){
+                    searchWordFlag = true;
                     predicates.add(cb.like(root.get(Post_.title), "%" + searchParam.getKeyword() + "%"));
                     predicates.add(cb.like(root.get(Post_.content), "%" + searchParam.getKeyword() + "%"));
                 }
 
-//                if(searchParam.getTag() != null && !searchParam.getTag().equals("")){
-//                    predicates.add(cb.like(root.get(Post_.tag), "%" + searchParam.getTag() + "%"));
-//                }
 
                 if(searchParam.getOrderBy() != null && !searchParam.getOrderBy().equals("")){
                     if(searchParam.getOrderBy().equals("createdAt")){
@@ -48,12 +47,21 @@ public class PostSpecification {
 
             }
 
-            for(Predicate p :predicates){
-                if(result == null){
-                    result = cb.and(p);
-                }else {
-                    result = cb.and(result, p);
+            for(int i=0; i<predicates.size(); i++){
+                if(searchWordFlag && i<2){
+                    if(result == null){
+                        result = cb.or(predicates.get(i));
+                    }else{
+                        result = cb.or(result, predicates.get(i));
+                    }
+                }else{
+                    if(result == null){
+                        result = cb.and(predicates.get(i));
+                    }else {
+                        result = cb.and(result, predicates.get(i));
+                    }
                 }
+
             }
             query.distinct(true);
 

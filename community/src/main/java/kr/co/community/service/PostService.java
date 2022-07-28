@@ -85,11 +85,7 @@ public class PostService {
 
     public int findLike(Long postId, Long memberId) {
         LikeEntity likeEntity = likeRepository.findByPost_IdAndMember_Id(postId, memberId);
-        if(Objects.isNull(likeEntity)){
-            return 0;
-        }else{
-            return 1;
-        }
+        return Objects.isNull(likeEntity) ? 0 : 1;
     }
 
     public Page<Post> findByMember(Member member, Pageable pageable) {

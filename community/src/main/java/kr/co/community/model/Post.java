@@ -60,10 +60,10 @@ public class Post {
     }
 
     public boolean isWriter(Member currentMember) {
-        return this.member.getUsername().equals(currentMember.getUsername());
+        return this.member.getId() == currentMember.getId();
     }
 
-    public void update(PostVo postVo) {
+    public void setContentAndTitle(PostVo postVo) {
         this.title=postVo.getTitle();
         this.content=postVo.getContent();
     }

@@ -84,7 +84,7 @@ public class PostController {
             postService.updateView(id);
         }
         if(currentMember != null){
-            int like = postService.findLike(id, currentMember.getId());
+            boolean like = postService.findLike(id, currentMember.getId());
             model.addAttribute("like", like);
         }
 
@@ -122,7 +122,7 @@ public class PostController {
             throw new Exception("수정 권한이 없습니다");
         }
 
-        postForUpdate.update(postVo);
+        postForUpdate.setContentAndTitle(postVo);
 
         postService.save(postForUpdate, postVo);
 
@@ -141,8 +141,8 @@ public class PostController {
 
     @PostMapping("/like")
     @ResponseBody
-    public int like(Long memberId, Long postId){
-        int result = postService.saveLike(postId, memberId);
+    public boolean like(Long memberId, Long postId){
+        boolean result = postService.saveLike(postId, memberId);
         return result;
     }
 }

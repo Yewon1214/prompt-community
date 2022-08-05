@@ -42,7 +42,7 @@ public class PostService {
     }
 
     @Transactional
-    public int saveLike(Long postId, Long memberId) {
+    public boolean saveLike(Long postId, Long memberId) {
         LikeEntity findLikeEntity = likeRepository.findByPost_IdAndMember_Id(postId, memberId);
         if(Objects.isNull(findLikeEntity)){
             Member member = memberService.findById(memberId);
@@ -51,11 +51,11 @@ public class PostService {
             LikeEntity likeEntity = LikeEntity.toLike(member, post);
             likeRepository.save(likeEntity);
             postRepository.plusLike(postId);
-            return 1;
+            return true;
         }else{
             likeRepository.deleteByPost_IdAndMember_Id(postId, memberId);
             postRepository.minusLike(postId);
-            return 0;
+            return false;
         }
     }
 
@@ -84,9 +84,9 @@ public class PostService {
         return postRepository.findByJoin(id);
     }
 
-    public int findLike(Long postId, Long memberId) {
+    public boolean findLike(Long postId, Long memberId) {
         LikeEntity likeEntity = likeRepository.findByPost_IdAndMember_Id(postId, memberId);
-        return Objects.isNull(likeEntity) ? 0 : 1;
+        return Objects.isNull(likeEntity) ? false : true;
     }
 
     public Page<Post> findByMember(Member member, Pageable pageable) {
